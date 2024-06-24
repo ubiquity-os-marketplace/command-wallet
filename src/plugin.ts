@@ -23,14 +23,30 @@ export async function plugin(inputs: PluginInputs, env: Env) {
       debug(message: unknown, ...optionalParams: unknown[]) {
         console.debug(message, ...optionalParams);
       },
-      info(message: unknown, ...optionalParams: unknown[]) {
+      async info(message: unknown, ...optionalParams: unknown[]) {
         console.log(message, ...optionalParams);
+        octokit.issues
+          .createComment({
+            owner: context.payload.repository.owner.login,
+            issue_number: context.payload.issue.number,
+            repo: context.payload.repository.name,
+            body: `\`\`\`diff\n${message} ${optionalParams}`,
+          })
+          .catch((e) => console.error("Failed to post info comment", e));
       },
       warn(message: unknown, ...optionalParams: unknown[]) {
         console.warn(message, ...optionalParams);
       },
-      error(message: unknown, ...optionalParams: unknown[]) {
+      async error(message: unknown, ...optionalParams: unknown[]) {
         console.error(message, ...optionalParams);
+        octokit.issues
+          .createComment({
+            owner: context.payload.repository.owner.login,
+            issue_number: context.payload.issue.number,
+            repo: context.payload.repository.name,
+            body: `\`\`\`diff\n- ${message} ${optionalParams}`,
+          })
+          .catch((e) => console.error("Failed to post fatal comment", e));
       },
       fatal(message: unknown, ...optionalParams: unknown[]) {
         console.error(message, ...optionalParams);

@@ -10,9 +10,9 @@ export class CommandParser {
     const program = new Command();
     program
       .command("/wallet")
-      .usage("@<username>")
-      .argument("<username>", "Wallet to query, e.g. @ubiquibot", this._parseUser)
-      .action((username) => registerWallet(context, username))
+      .usage("<wallet>")
+      .argument("<wallet>", "Wallet address to query, e.g. 0x000000000000000000000000000000000000000", this._parseWalletAddress)
+      .action((wallet) => registerWallet(context, wallet))
       .helpCommand(false)
       .exitOverride()
       .version(packageJson.version);
@@ -42,14 +42,10 @@ export class CommandParser {
     return this._program.helpInformation();
   }
 
-  _parseUser(value: string) {
+  _parseWalletAddress(value: string) {
     if (!value.length || value.length < 2) {
-      throw new InvalidArgumentError("Username should be at least 2 characters long.");
+      throw new InvalidArgumentError("Wallet address should be at least 2 characters long.");
     }
-    if (value[0] !== "@") {
-      throw new InvalidArgumentError("Username should start with @.");
-    }
-    // Remove @ character
-    return value.slice(1);
+    return value;
   }
 }
