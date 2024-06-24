@@ -32,6 +32,7 @@ export async function plugin(inputs: PluginInputs, env: Env) {
             repo: context.payload.repository.name,
             body: `\`\`\`diff\n${message} ${optionalParams}`,
           })
+          .then(() => console.log("posted info"))
           .catch((e) => console.error("Failed to post info comment", e));
       },
       warn(message: unknown, ...optionalParams: unknown[]) {
