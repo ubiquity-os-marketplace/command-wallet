@@ -1,6 +1,8 @@
 import { Octokit } from "@octokit/rest";
 import { createClient } from "@supabase/supabase-js";
+import { CommanderError } from "commander";
 import { createAdapters } from "./adapters";
+import { CommandParser } from "./handlers/command-parser";
 import { Env, PluginInputs } from "./types";
 import { Context } from "./types";
 
@@ -40,7 +42,20 @@ export async function plugin(inputs: PluginInputs, env: Env) {
   context.adapters = createAdapters(supabase, context);
 
   if (context.eventName === "issue_comment.created") {
-    // do something
+    const commandParser = new CommandParser(context);
+    try {
+      const args = inputs.eventPayload.comment.body.trim().split(/\s+/);
+      await commandParser.parse(args);
+    } catch (e) {
+      if (e instanceof CommanderError) {
+        if (e.code !== "commander.unknownCommand") {
+          context.logger.fatal(e);
+        }
+      } else {
+        context.logger.error("error", e);
+        throw e;
+      }
+    }
   } else {
     context.logger.error(`Unsupported event: ${context.eventName}`);
   }

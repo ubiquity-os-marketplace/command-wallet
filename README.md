@@ -9,18 +9,13 @@ Helps users retrieving their wallet, or setting it to collect subsequent task re
 
 ## Getting Started
 
-1. Create a new repository using this template.
-2. Clone the repository to your local machine.
-3. Install the dependencies preferably using `yarn` or `bun`.
-
-## Creating a new plugin
-
-- If your plugin is to be used as a slash command which should have faster response times as opposed to longer running GitHub action tasks, you should use the `worker` type.
-
-1. Ensure you understand and have setup the [kernel](https://github.com/ubiquity/ubiquibot-kernel).
-2. Update [compute.yml](./.github/workflows/compute.yml) with your plugin's name and update the `id`.
-3. Update [context.ts](./src/types/context.ts) with the events that your plugin will fire on.
-4. Update [plugin-inputs.ts](./src/types/plugin-inputs.ts) to match the `with:` settings in your org or repo level configuration.
+1. Install the dependencies preferably using `yarn` or `bun`.
+2. Copy `env.example` and `.dev.vars.example` to `.env` and `.dev.vars` respectively, and fill the variables
+3. Generate Supabase types by running
+    ```shell
+    yarn prebuild
+    ```
+4. Run the project with `yarn wrangler`
 
 ## Example configuration
 

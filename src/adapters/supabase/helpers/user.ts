@@ -1,19 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Super } from "./supabase";
-import { Context } from "../../../types/context";
+import { Context } from "../../../types";
 
 type Wallet = {
   address: string;
 };
 
 export class User extends Super {
-  user_id: string | undefined;
-  comment_id: string | undefined;
-  issue_id: string | undefined;
-  repository_id: string | undefined;
-  node_id: string | undefined;
-  node_type: string | undefined;
-
   constructor(supabase: SupabaseClient, context: Context) {
     super(supabase, context);
   }
