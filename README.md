@@ -1,4 +1,6 @@
-# `@ubiquibot/plugin-template`
+# `@ubiquibot/command-wallet`
+
+Helps users retrieving their wallet, or setting it to collect subsequent task rewards.
 
 ## Prerequisites
 
@@ -20,25 +22,15 @@
 3. Update [context.ts](./src/types/context.ts) with the events that your plugin will fire on.
 4. Update [plugin-inputs.ts](./src/types/plugin-inputs.ts) to match the `with:` settings in your org or repo level configuration.
 
-- Your plugin config should look similar to this:
+## Example configuration
 
 ```yml
-- plugin: <plugin-org/owner>/<plugin-repo-name>:compute.yml@development
-  name: plugin-name
-  id: plugin-name-command
-  description: "Plugin description" # small description of what the plugin does
-  command: "<regex for command>" # if you are creating a plugin with a slash command
-  example: "<example usage>" # how to invoke the slash command
-  with: # these are the example settings, the kernel passes these to the plugin.
-    disabledCommands: []
-    timers:
-      reviewDelayTolerance: 86000
-      taskStaleTimeoutDuration: 2580000
-    miscellaneous:
-      maxConcurrentTasks: 3
-    labels:
-      time: []
-      priority: []
+- plugin: ubiquibot/command-wallet
+  name: command-wallet
+  id: command-wallet
+  description: "Helps users retrieving their wallet, or setting it to collect subsequent task rewards."
+  command: "/wallet"
+  example: "/wallet @user"
 ```
 
 ###### At this stage, your plugin will fire on your defined events with the required settings passed in from the kernel. You can now start writing your plugin's logic.
