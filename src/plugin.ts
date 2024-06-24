@@ -29,7 +29,7 @@ export async function plugin(inputs: PluginInputs, env: Env) {
           owner: context.payload.repository.owner.login,
           issue_number: context.payload.issue.number,
           repo: context.payload.repository.name,
-          body: `\`\`\`diff\n${message} ${optionalParams}`,
+          body: `\`\`\`diff\n${message}`,
         });
       },
       warn(message: unknown, ...optionalParams: unknown[]) {

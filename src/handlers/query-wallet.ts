@@ -24,18 +24,18 @@ export async function registerWallet(context: Context, body: string) {
   const ensName = extractEnsName(body.replace("/wallet", "").trim());
 
   if (!address && ensName) {
-    context.logger.info("Trying to resolve address from ENS name", { ensName });
+    context.logger.debug("Trying to resolve address from ENS name", { ensName });
     address = await resolveAddress(ensName);
     if (!address) {
       const errorMessage = `Resolving address from ENS name failed: ${ensName}`;
       context.logger.fatal(errorMessage);
       throw new Error(errorMessage);
     }
-    context.logger.info("Resolved address from ENS name", { ensName, address });
+    context.logger.debug("Resolved address from ENS name", { ensName, address });
   }
 
   if (!address) {
-    return context.logger.info("Skipping to register a wallet address because both address/ens doesn't exist");
+    return context.logger.info("# Skipping to register a wallet address because both address/ens doesn't exist");
   }
 
   if (config.registerWalletWithVerification) {
@@ -49,7 +49,7 @@ export async function registerWallet(context: Context, body: string) {
   if (payload.comment) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
-    return context.logger.info("Successfully registered wallet address", { sender, address });
+    return context.logger.info("+ Successfully registered wallet address", { sender, address });
   } else {
     throw new Error("Payload comment is undefined");
   }
