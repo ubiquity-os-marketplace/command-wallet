@@ -1,20 +1,19 @@
-import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { Context } from "../../../types";
 import { Database } from "../../../types/database";
 import { Super } from "./supabase";
 
-type LocationRow = Database["public"]["Tables"]["locations"]["Row"];
 type WalletRow = Database["public"]["Tables"]["wallets"]["Row"];
 type WalletInsert = Database["public"]["Tables"]["wallets"]["Insert"];
 type UserRow = Database["public"]["Tables"]["users"]["Row"];
 type UserWithWallet = (UserRow & { wallets: WalletRow | null })[];
 
 export class Wallet extends Super {
-  constructor(supabase: SupabaseClient, context: Context) {
+  constructor(supabase: SupabaseClient<Database>, context: Context) {
     super(supabase, context);
   }
 
-  public async getAddress(id: number): Promise<string> {
+  public async getAddress(id: number) {
     const userWithWallet = await this._getUserWithWallet(id);
     return this._validateAndGetWalletAddress(userWithWallet);
   }
@@ -43,15 +42,13 @@ export class Wallet extends Super {
     }
   }
 
-  private async _getUserWithWallet(id: number): Promise<UserWithWallet> {
+  private async _getUserWithWallet(id: number) {
     const { data, error } = await this.supabase.from("users").select("*, wallets(*)").filter("id", "eq", id);
     if (error) throw error;
     return data;
   }
 
   private _validateAndGetWalletAddress(userWithWallet: UserWithWallet): string {
-    // const payload = Runtime.getState().latestEventContext.payload;
-
     if (userWithWallet[0]?.wallets?.address === undefined) throw new Error("Wallet address is undefined");
     if (userWithWallet[0]?.wallets?.address === null) throw new Error("Wallet address is null");
     return userWithWallet[0]?.wallets?.address;
@@ -74,10 +71,7 @@ export class Wallet extends Super {
 
   private async _registerNewUser(user: Context["payload"]["sender"], locationMetaData: LocationMetaData) {
     // Insert the location metadata into the locations table
-    const { data: locationData, error: locationError } = (await this.supabase.from("locations").insert(locationMetaData).single()) as {
-      data: LocationRow;
-      error: PostgrestError | null;
-    };
+    const { data: locationData, error: locationError } = await this.supabase.from("locations").insert(locationMetaData).select().single();
 
     if (locationError) {
       throw new Error(locationError.message);
@@ -99,7 +93,10 @@ export class Wallet extends Super {
     return userData as UserRow;
   }
 
-  private async _checkIfWalletExists(userData: UserRow): Promise<{ data: WalletRow | null; error: PostgrestError | null }> {
+  private async _checkIfWalletExists(userData: UserRow) {
+    if (userData.wallet_id === null) {
+      throw new Error("Wallet ID is null.");
+    }
     const { data, error } = await this.supabase.from("wallets").select("*").eq("id", userData.wallet_id).maybeSingle();
 
     return { data: data as WalletRow, error };
@@ -113,9 +110,9 @@ export class Wallet extends Super {
     }
   }
 
-  private async _getRegisteredWalletData(userData: UserRow): Promise<WalletRow> {
+  private async _getRegisteredWalletData(userData: UserRow) {
     const walletResponse = await this._checkIfWalletExists(userData);
-    const walletData = walletResponse.data as WalletRow;
+    const walletData = walletResponse.data;
     const walletError = walletResponse.error;
 
     if (walletError) throw walletError;
@@ -129,7 +126,7 @@ export class Wallet extends Super {
       issue_id: payload.issue.id,
       repository_id: payload.repository.id,
       organization_id: payload.organization?.id ?? payload.repository.owner.id,
-    } as LocationMetaData;
+    };
   }
 
   private async _registerNewWallet(context: Context, { address, locationMetaData, payload }: RegisterNewWallet) {
@@ -168,6 +165,9 @@ export class Wallet extends Super {
 
   private async _enrichLocationMetaData(context: Context, walletData: WalletRow, locationMetaData: LocationMetaData) {
     const logger = context.logger;
+    if (walletData.location_id === null) {
+      throw new Error("Location ID is null");
+    }
     logger.info("Enriching wallet location metadata", locationMetaData);
     return this.supabase.from("locations").update(locationMetaData).eq("id", walletData.location_id);
   }
