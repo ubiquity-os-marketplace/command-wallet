@@ -13,8 +13,6 @@ env:
 jobs:
   generate_types:
     runs-on: ubuntu-latest
-    needs:
-      - run-migration
     permissions:
       contents: write
     steps:
