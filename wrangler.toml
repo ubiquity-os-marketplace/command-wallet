@@ -1,4 +1,4 @@
-name = "command-wallet"
+name = "ubiquibot-command-wallet"
 main = "src/worker.ts"
 compatibility_date = "2024-06-24"
 node_compat = true
