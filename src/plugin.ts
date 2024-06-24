@@ -25,29 +25,24 @@ export async function plugin(inputs: PluginInputs, env: Env) {
       },
       async info(message: unknown, ...optionalParams: unknown[]) {
         console.log(message, ...optionalParams);
-        octokit.issues
-          .createComment({
-            owner: context.payload.repository.owner.login,
-            issue_number: context.payload.issue.number,
-            repo: context.payload.repository.name,
-            body: `\`\`\`diff\n${message} ${optionalParams}`,
-          })
-          .then(() => console.log("posted info"))
-          .catch((e) => console.error("Failed to post info comment", e));
+        await octokit.issues.createComment({
+          owner: context.payload.repository.owner.login,
+          issue_number: context.payload.issue.number,
+          repo: context.payload.repository.name,
+          body: `\`\`\`diff\n${message} ${optionalParams}`,
+        });
       },
       warn(message: unknown, ...optionalParams: unknown[]) {
         console.warn(message, ...optionalParams);
       },
       async error(message: unknown, ...optionalParams: unknown[]) {
         console.error(message, ...optionalParams);
-        octokit.issues
-          .createComment({
-            owner: context.payload.repository.owner.login,
-            issue_number: context.payload.issue.number,
-            repo: context.payload.repository.name,
-            body: `\`\`\`diff\n- ${message} ${optionalParams}`,
-          })
-          .catch((e) => console.error("Failed to post fatal comment", e));
+        await octokit.issues.createComment({
+          owner: context.payload.repository.owner.login,
+          issue_number: context.payload.issue.number,
+          repo: context.payload.repository.name,
+          body: `\`\`\`diff\n- ${message} ${optionalParams}`,
+        });
       },
       fatal(message: unknown, ...optionalParams: unknown[]) {
         console.error(message, ...optionalParams);
