@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { db } from "./db";
 
+console.log("HANDLERS", process.env);
 /**
  * Intercepts the routes and returns a custom payload
  */
