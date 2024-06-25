@@ -1,3 +1,4 @@
+// @ts-expect-error err
 import { HandlerConstructorConfig, RPCHandler } from "@ubiquity-dao/rpc-handler";
 import { ethers } from "ethers";
 import { Context } from "../types";
@@ -91,7 +92,8 @@ export async function resolveAddress(ensName: string) {
   // Explicitly set provider to Ethereum mainnet
   const handler = useHandler(1);
   const provider = await handler.getFastestRpcProvider();
-  return await provider.resolveName(ensName).catch((err) => {
+  console.log("trying to resolve address from ENS address", ensName);
+  return await provider.resolveName(ensName).catch((err: object) => {
     console.trace({ err });
     return null;
   });
