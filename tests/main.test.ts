@@ -18,7 +18,7 @@ jest.mock("ethers", () => ({
   },
 }));
 
-describe("User tests", () => {
+describe("Wallet command tests", () => {
   beforeEach(() => {
     for (const dbTable of Object.keys(dbSeed)) {
       const tableName = dbTable as keyof typeof dbSeed;
