@@ -69,10 +69,10 @@ export async function plugin(inputs: PluginInputs, env: Env) {
     } catch (e) {
       if (e instanceof CommanderError) {
         if (e.code !== "commander.unknownCommand") {
-          context.logger.fatal(e);
+          await context.logger.error(e.message);
         }
       } else {
-        await context.logger.error(e);
+        context.logger.fatal(e);
         throw e;
       }
     }
