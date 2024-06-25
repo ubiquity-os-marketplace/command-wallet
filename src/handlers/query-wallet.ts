@@ -1,3 +1,4 @@
+import { HandlerConstructorConfig, RPCHandler } from "@ubiquity-dao/rpc-handler";
 import { ethers } from "ethers";
 import { Context } from "../types";
 
@@ -72,10 +73,24 @@ function registerWalletWithVerification(context: Context, body: string, address:
   }
 }
 
+function useHandler(networkId: number) {
+  const config: HandlerConstructorConfig = {
+    networkId,
+    rpcTimeout: 1500,
+    autoStorage: false,
+    cacheRefreshCycles: 10,
+    networkName: null,
+    networkRpcs: null,
+    runtimeRpcs: null,
+  };
+  return new RPCHandler(config);
+}
+
 export async function resolveAddress(ensName: string) {
   // Gets the Ethereum address associated with an ENS (Ethereum Name Service) name
   // Explicitly set provider to Ethereum mainnet
-  const provider = new ethers.JsonRpcProvider(`https://rpc-bot.ubq.fi/v1/mainnet`);
+  const handler = useHandler(1);
+  const provider = await handler.getFastestRpcProvider();
   return await provider.resolveName(ensName).catch((err) => {
     console.trace({ err });
     return null;
