@@ -10,7 +10,7 @@ Helps users setting their wallet to collect subsequent task rewards.
 ## Getting Started
 
 1. Install the dependencies preferably using `yarn` or `bun`.
-2. Copy `env.example` and `.dev.vars.example` to `.env` and `.dev.vars` respectively, and fill the variables
+2. Copy `.dev.vars.example` to `.dev.vars` and fill the variables
 3. Generate Supabase types by running
     ```shell
     yarn prebuild
