@@ -1,6 +1,6 @@
 # `@ubiquibot/command-wallet`
 
-Helps users retrieving their wallet, or setting it to collect subsequent task rewards.
+Helps users setting their wallet to collect subsequent task rewards.
 
 ## Prerequisites
 
@@ -23,9 +23,9 @@ Helps users retrieving their wallet, or setting it to collect subsequent task re
 - plugin: ubiquibot/command-wallet
   name: command-wallet
   id: command-wallet
-  description: "Helps users retrieving their wallet, or setting it to collect subsequent task rewards."
+  description: "Helps users setting their wallet to collect subsequent task rewards."
   command: "/wallet"
-  example: "/wallet @user"
+  example: "/wallet ubiquibot.eth"
 ```
 
 ###### At this stage, your plugin will fire on your defined events with the required settings passed in from the kernel. You can now start writing your plugin's logic.
