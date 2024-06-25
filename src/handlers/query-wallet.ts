@@ -28,7 +28,7 @@ export async function registerWallet(context: Context, body: string) {
     address = await resolveAddress(ensName);
     if (!address) {
       const errorMessage = `Resolving address from ENS name failed: ${ensName}`;
-      context.logger.error(errorMessage);
+      await context.logger.error(errorMessage);
       throw new Error(errorMessage);
     }
     context.logger.debug("Resolved address from ENS name", { ensName, address });

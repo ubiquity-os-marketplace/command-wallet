@@ -19,9 +19,9 @@ export interface Context<T extends SupportedEventsU = SupportedEventsU, TU exten
   env: Env;
   logger: {
     fatal: (message: unknown, ...optionalParams: unknown[]) => void;
-    error: (message: unknown, ...optionalParams: unknown[]) => void;
+    error: (message: unknown, ...optionalParams: unknown[]) => Promise<void>;
     warn: (message: unknown, ...optionalParams: unknown[]) => void;
-    info: (message: unknown, ...optionalParams: unknown[]) => void;
+    info: (message: unknown, ...optionalParams: unknown[]) => Promise<void>;
     debug: (message: unknown, ...optionalParams: unknown[]) => void;
   };
 }

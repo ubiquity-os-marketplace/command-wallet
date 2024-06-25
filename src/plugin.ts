@@ -64,11 +64,11 @@ export async function plugin(inputs: PluginInputs, env: Env) {
           context.logger.fatal(e);
         }
       } else {
-        context.logger.error("error", e);
+        await context.logger.error("error", e);
         throw e;
       }
     }
   } else {
-    context.logger.error(`Unsupported event: ${context.eventName}`);
+    context.logger.warn(`Unsupported event: ${context.eventName}`);
   }
 }

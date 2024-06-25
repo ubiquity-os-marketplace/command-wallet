@@ -17,11 +17,11 @@ export class CommandParser {
       .exitOverride()
       .version(packageJson.version);
     program.configureOutput({
-      writeOut(str: string) {
-        context.logger.info(str);
+      async writeOut(str: string) {
+        await context.logger.info(str);
       },
-      writeErr(str: string) {
-        context.logger.error(str);
+      async writeErr(str: string) {
+        await context.logger.error(str);
       },
       getErrHelpWidth(): number {
         return 0;
