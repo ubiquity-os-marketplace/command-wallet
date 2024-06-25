@@ -72,7 +72,7 @@ export async function plugin(inputs: PluginInputs, env: Env) {
           await context.logger.error(e.message);
         }
       } else {
-        context.logger.fatal(e);
+        await context.logger.error(e);
         throw e;
       }
     }
