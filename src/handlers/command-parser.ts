@@ -18,10 +18,10 @@ export class CommandParser {
       .version(packageJson.version);
     program.configureOutput({
       async writeOut(str: string) {
-        await context.logger.info(str);
+        context.logger.debug(str);
       },
       async writeErr(str: string) {
-        await context.logger.error(str);
+        context.logger.warn(str);
       },
       getErrHelpWidth(): number {
         return 0;

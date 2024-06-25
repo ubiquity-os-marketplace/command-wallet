@@ -99,7 +99,7 @@ export class Wallet extends Super {
     }
     const { data, error } = await this.supabase.from("wallets").select("*").eq("id", userData.wallet_id).maybeSingle();
 
-    return { data: data as WalletRow, error };
+    return { data, error };
   }
 
   private async _updateWalletId(walletId: number, userId: number) {
@@ -168,7 +168,7 @@ export class Wallet extends Super {
     if (walletData.location_id === null) {
       throw new Error("Location ID is null");
     }
-    logger.info("Enriching wallet location metadata", locationMetaData);
+    logger.debug("Enriching wallet location metadata", locationMetaData);
     return this.supabase.from("locations").update(locationMetaData).eq("id", walletData.location_id);
   }
 }

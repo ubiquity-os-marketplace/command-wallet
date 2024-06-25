@@ -25,24 +25,32 @@ export async function plugin(inputs: PluginInputs, env: Env) {
       },
       async info(message: unknown, ...optionalParams: unknown[]) {
         console.log(message, ...optionalParams);
-        await octokit.issues.createComment({
-          owner: context.payload.repository.owner.login,
-          issue_number: context.payload.issue.number,
-          repo: context.payload.repository.name,
-          body: `\`\`\`diff\n${message}`,
-        });
+        try {
+          await octokit.issues.createComment({
+            owner: context.payload.repository.owner.login,
+            issue_number: context.payload.issue.number,
+            repo: context.payload.repository.name,
+            body: `\`\`\`diff\n${message}`,
+          });
+        } catch (e) {
+          console.error("Failed to post info comment", e);
+        }
       },
       warn(message: unknown, ...optionalParams: unknown[]) {
         console.warn(message, ...optionalParams);
       },
       async error(message: unknown, ...optionalParams: unknown[]) {
         console.error(message, ...optionalParams);
-        await octokit.issues.createComment({
-          owner: context.payload.repository.owner.login,
-          issue_number: context.payload.issue.number,
-          repo: context.payload.repository.name,
-          body: `\`\`\`diff\n- ${message} ${optionalParams}`,
-        });
+        try {
+          await octokit.issues.createComment({
+            owner: context.payload.repository.owner.login,
+            issue_number: context.payload.issue.number,
+            repo: context.payload.repository.name,
+            body: `\`\`\`diff\n- ${message} ${optionalParams}`,
+          });
+        } catch (e) {
+          console.error("Failed to post error comment", e);
+        }
       },
       fatal(message: unknown, ...optionalParams: unknown[]) {
         console.error(message, ...optionalParams);
