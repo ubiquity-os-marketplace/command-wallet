@@ -84,6 +84,7 @@ export class Wallet extends Super {
     const { data: userData, error: userError } = await this.supabase
       .from("users")
       .insert([{ id: user.id, location_id: locationId /* other fields if necessary */ }])
+      .select()
       .single();
 
     if (userError) {
@@ -95,7 +96,7 @@ export class Wallet extends Super {
 
   private async _checkIfWalletExists(userData: UserRow) {
     if (userData.wallet_id === null) {
-      throw new Error("Wallet ID is null.");
+      return { data: null, error: null };
     }
     const { data, error } = await this.supabase.from("wallets").select("*").eq("id", userData.wallet_id).maybeSingle();
 
@@ -149,7 +150,7 @@ export class Wallet extends Super {
       address: address,
     };
 
-    const { data: walletInsertData, error: walletInsertError } = await this.supabase.from("wallets").insert(newWallet).single();
+    const { data: walletInsertData, error: walletInsertError } = await this.supabase.from("wallets").insert(newWallet).select().single();
 
     if (walletInsertError) throw walletInsertError;
     return walletInsertData as WalletRow;
