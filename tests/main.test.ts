@@ -1,4 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { ethers } from "ethers";
 import { plugin } from "../src/plugin";
 import { PluginInputs } from "../src/types";
 import { db } from "./__mocks__/db";
@@ -15,6 +16,7 @@ jest.mock("ethers", () => ({
     JsonRpcProvider: jest.fn(() => ({
       resolveName: jest.fn(async () => "0x0000000000000000000000000000000000000001"),
     })),
+    getAddress: (jest.requireActual("ethers") as typeof ethers).getAddress,
   },
 }));
 

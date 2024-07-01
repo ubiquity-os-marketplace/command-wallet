@@ -83,7 +83,7 @@ export class Wallet extends Super {
     // Register the new user with the location ID
     const { data: userData, error: userError } = await this.supabase
       .from("users")
-      .insert([{ id: user.id, location_id: locationId /* other fields if necessary */ }])
+      .insert([{ id: user.id, location_id: locationId }])
       .select()
       .single();
 

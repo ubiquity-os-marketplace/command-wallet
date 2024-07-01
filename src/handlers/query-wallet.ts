@@ -44,6 +44,9 @@ export async function registerWallet(context: Context, body: string) {
     return logger.error("Skipping to register a wallet address because user is trying to set their address to null address");
   }
 
+  // Makes sure that the address is check-summed
+  address = ethers.getAddress(address);
+
   if (payload.comment) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
