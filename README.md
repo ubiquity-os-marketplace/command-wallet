@@ -1,6 +1,6 @@
 # `@ubiquibot/command-wallet`
 
-Helps users setting their wallet to collect subsequent task rewards.
+Allows users to register their wallets to collect rewards.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ Helps users setting their wallet to collect subsequent task rewards.
 - plugin: ubiquibot/command-wallet
   name: command-wallet
   id: command-wallet
-  description: "Helps users setting their wallet to collect subsequent task rewards."
+  description: "Allows users to register their wallets to collect rewards."
   command: "/wallet"
   example: "/wallet ubiquibot.eth"
 ```

@@ -1,7 +1,7 @@
 {
   "name": "command-wallet",
   "version": "1.0.0",
-  "description": "Helps users setting their wallet to collect subsequent task rewards.",
+  "description": "Allows users to register their wallets to collect rewards.",
   "author": "Ubiquity DAO",
   "license": "MIT",
   "main": "src/worker.ts",
