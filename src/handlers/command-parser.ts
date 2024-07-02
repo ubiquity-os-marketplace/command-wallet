@@ -11,7 +11,7 @@ export class CommandParser {
     program
       .command("/wallet")
       .usage("<address>")
-      .argument("<address>", "Wallet address to query, e.g. 0x000000000000000000000000000000000000001", this._parseWalletAddress)
+      .argument("<address>", "Wallet address to query, e.g. 0x000000000000000000000000000000000000000", this._parseWalletAddress)
       .action((address) => registerWallet(context, address))
       .helpCommand(false)
       .exitOverride()
