@@ -33,7 +33,7 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (!address) {
-    return context.logger.info("# Skipping to register a wallet address because both address/ens doesn't exist");
+    return context.logger.info("Skipping to register a wallet address because both address/ens doesn't exist");
   }
 
   if (config.registerWalletWithVerification) {
@@ -50,7 +50,7 @@ export async function registerWallet(context: Context, body: string) {
   if (payload.comment) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
-    return context.logger.info("+ Successfully registered wallet address", { sender, address });
+    return context.logger.ok("Successfully registered wallet address", { sender, address });
   } else {
     throw new Error("Payload comment is undefined");
   }

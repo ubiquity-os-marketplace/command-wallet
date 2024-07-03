@@ -23,6 +23,19 @@ export async function plugin(inputs: PluginInputs, env: Env) {
       debug(message: unknown, ...optionalParams: unknown[]) {
         console.debug(message, ...optionalParams);
       },
+      async ok(message: unknown, ...optionalParams: unknown[]) {
+        console.debug(message, ...optionalParams);
+        try {
+          await octokit.issues.createComment({
+            owner: context.payload.repository.owner.login,
+            issue_number: context.payload.issue.number,
+            repo: context.payload.repository.name,
+            body: `\`\`\`diff\n+ ${message}`,
+          });
+        } catch (e) {
+          console.error("Failed to post ok comment", e);
+        }
+      },
       async info(message: unknown, ...optionalParams: unknown[]) {
         console.log(message, ...optionalParams);
         try {
@@ -30,7 +43,7 @@ export async function plugin(inputs: PluginInputs, env: Env) {
             owner: context.payload.repository.owner.login,
             issue_number: context.payload.issue.number,
             repo: context.payload.repository.name,
-            body: `\`\`\`diff\n${message}`,
+            body: `\`\`\`diff\n# ${message}`,
           });
         } catch (e) {
           console.error("Failed to post info comment", e);
