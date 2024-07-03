@@ -50,8 +50,8 @@ describe("Wallet command tests", () => {
       { SUPABASE_URL: process.env.SUPABASE_URL, SUPABASE_KEY: process.env.SUPABASE_KEY }
     );
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenLastCalledWith("+ Successfully registered wallet address", {
-      address: "0x0000000000000000000000000000000000000000",
+    expect(spy).toHaveBeenLastCalledWith("Successfully registered wallet address", {
+      address: "0x0000000000000000000000000000000000000001",
       sender: "ubiquibot",
     });
   });

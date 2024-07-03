@@ -24,7 +24,7 @@ export async function plugin(inputs: PluginInputs, env: Env) {
         console.debug(message, ...optionalParams);
       },
       async ok(message: unknown, ...optionalParams: unknown[]) {
-        console.debug(message, ...optionalParams);
+        console.log(message, ...optionalParams);
         try {
           await octokit.issues.createComment({
             owner: context.payload.repository.owner.login,
