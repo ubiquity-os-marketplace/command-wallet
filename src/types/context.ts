@@ -4,7 +4,7 @@ import { createAdapters } from "../adapters";
 import { Env } from "./env";
 import { PluginSettings } from "./plugin-inputs";
 
-export type SupportedEventsU = "issue_comment.created"; // Add more events here
+export type SupportedEventsU = "issue_comment.created";
 
 export type SupportedEvents = {
   [K in SupportedEventsU]: K extends WebhookEventName ? WebhookEvent<K> : never;
@@ -19,9 +19,10 @@ export interface Context<T extends SupportedEventsU = SupportedEventsU, TU exten
   env: Env;
   logger: {
     fatal: (message: unknown, ...optionalParams: unknown[]) => void;
-    error: (message: unknown, ...optionalParams: unknown[]) => void;
+    error: (message: unknown, ...optionalParams: unknown[]) => Promise<void>;
     warn: (message: unknown, ...optionalParams: unknown[]) => void;
-    info: (message: unknown, ...optionalParams: unknown[]) => void;
+    info: (message: unknown, ...optionalParams: unknown[]) => Promise<void>;
+    ok: (message: unknown, ...optionalParams: unknown[]) => Promise<void>;
     debug: (message: unknown, ...optionalParams: unknown[]) => void;
   };
 }
