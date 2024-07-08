@@ -12,12 +12,8 @@ function extractEnsName(text: string) {
 }
 
 export async function registerWallet(context: Context, body: string) {
-  const payload = context.payload;
-  const config = context.config;
-  const logger = context.logger;
+  const { payload, config, logger, adapters } = context;
   const sender = payload.sender.login;
-  const adapters = context.adapters;
-
   const regexForAddress = /(0x[a-fA-F0-9]{40})/g;
   const addressMatches = body.match(regexForAddress);
   let address = addressMatches ? addressMatches[0] : null;
