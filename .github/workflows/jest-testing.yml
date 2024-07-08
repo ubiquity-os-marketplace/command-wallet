@@ -5,6 +5,8 @@ on:
 
 env:
   NODE_ENV: "test"
+  SUPABASE_URL: "http://127.0.0.1:3000"
+  SUPABASE_KEY: "supabase-key"
 
 jobs:
   testing:

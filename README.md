@@ -1,4 +1,6 @@
-# `@ubiquibot/plugin-template`
+# `@ubiquibot/command-wallet`
+
+Allows users to register their wallets to collect rewards.
 
 ## Prerequisites
 
@@ -7,38 +9,23 @@
 
 ## Getting Started
 
-1. Create a new repository using this template.
-2. Clone the repository to your local machine.
-3. Install the dependencies preferably using `yarn` or `bun`.
+1. Install the dependencies preferably using `yarn` or `bun`.
+2. Copy `.dev.vars.example` to `.dev.vars` and fill the variables
+3. Generate Supabase types by running
+    ```shell
+    yarn prebuild
+    ```
+4. Run the project with `yarn wrangler`
 
-## Creating a new plugin
-
-- If your plugin is to be used as a slash command which should have faster response times as opposed to longer running GitHub action tasks, you should use the `worker` type.
-
-1. Ensure you understand and have setup the [kernel](https://github.com/ubiquity/ubiquibot-kernel).
-2. Update [compute.yml](./.github/workflows/compute.yml) with your plugin's name and update the `id`.
-3. Update [context.ts](./src/types/context.ts) with the events that your plugin will fire on.
-4. Update [plugin-inputs.ts](./src/types/plugin-inputs.ts) to match the `with:` settings in your org or repo level configuration.
-
-- Your plugin config should look similar to this:
+## Example configuration
 
 ```yml
-- plugin: <plugin-org/owner>/<plugin-repo-name>:compute.yml@development
-  name: plugin-name
-  id: plugin-name-command
-  description: "Plugin description" # small description of what the plugin does
-  command: "<regex for command>" # if you are creating a plugin with a slash command
-  example: "<example usage>" # how to invoke the slash command
-  with: # these are the example settings, the kernel passes these to the plugin.
-    disabledCommands: []
-    timers:
-      reviewDelayTolerance: 86000
-      taskStaleTimeoutDuration: 2580000
-    miscellaneous:
-      maxConcurrentTasks: 3
-    labels:
-      time: []
-      priority: []
+- plugin: ubiquibot/command-wallet
+  name: command-wallet
+  id: command-wallet
+  description: "Allows users to register their wallets to collect rewards."
+  command: "/wallet"
+  example: "/wallet ubiquibot.eth"
 ```
 
 ###### At this stage, your plugin will fire on your defined events with the required settings passed in from the kernel. You can now start writing your plugin's logic.

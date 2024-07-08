@@ -15,3 +15,5 @@ junit.xml
 cypress/screenshots
 script.ts
 .wrangler
+http-client.private.env.json
+test-dashboard.md
