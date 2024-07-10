@@ -1,0 +1,11 @@
+{
+  "name": "Wallet",
+  "description": "Allows users to register their wallets to collect rewards.",
+  "commands": [
+    {
+      "command": "/wallet",
+      "example": "/wallet ubiquibot.eth",
+      "description": "Wallet address to query, e.g. 0x000000000000000000000000000000000000001 or ubiquibot.eth"
+    }
+  ]
+}
