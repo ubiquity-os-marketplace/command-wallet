@@ -3,7 +3,7 @@
   "description": "Allows users to register their wallets to collect rewards.",
   "commands": {
     "wallet": {
-      "example": "/wallet ubq.eth",
+      "ubiquity:example": "/wallet ubq.eth",
       "description": "Register your wallet address for payments."
     }
   }
