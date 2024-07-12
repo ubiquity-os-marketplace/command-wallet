@@ -4,7 +4,7 @@
   "ubiquibot:listeners": [ "issue_comment.created" ],
   "commands": {
     "wallet": {
-      "example": "/wallet ubq.eth",
+      "ubiquibot:example": "/wallet ubq.eth",
       "description": "Register your wallet address for payments."
     }
   }
