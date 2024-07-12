@@ -1,6 +1,7 @@
 {
   "name": "Wallet",
   "description": "Allows users to register their wallets to collect rewards.",
+  "ubiquity:runsOn": [ "issue_comment.created" ],
   "commands": {
     "wallet": {
       "example": "/wallet ubq.eth",
