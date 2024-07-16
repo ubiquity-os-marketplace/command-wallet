@@ -1,10 +1,10 @@
 {
   "name": "Wallet",
   "description": "Allows users to register their wallets to collect rewards.",
-  "ubiquibot:listeners": [ "issue_comment.created" ],
+  "ubiquity:listeners": [ "issue_comment.created" ],
   "commands": {
     "wallet": {
-      "ubiquibot:example": "/wallet ubq.eth",
+      "ubiquity:example": "/wallet ubq.eth",
       "description": "Register your wallet address for payments."
     }
   }
