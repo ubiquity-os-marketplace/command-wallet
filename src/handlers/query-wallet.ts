@@ -77,14 +77,14 @@ export async function resolveAddress(ensName: string) {
   // Explicitly set provider to Ethereum main-net
   console.log("1. resolveAddress");
   const rpc = new RPCHandler({
-    networkId: "100",
-    networkName: null,
-    networkRpcs: [{ url: "https://gnosis-pokt.nodies.app" }],
-    autoStorage: null,
+    networkId: "1",
+    networkName: "ethereum-mainnet",
+    networkRpcs: null,
+    autoStorage: false,
     cacheRefreshCycles: null,
-    runtimeRpcs: ["https://gnosis-pokt.nodies.app"],
+    runtimeRpcs: null,
     rpcTimeout: null,
-    proxySettings: { retryCount: 5, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
+    proxySettings: { retryCount: 1, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
   });
   console.log("2. resolveAddress");
   const provider = await rpc.getFastestRpcProvider();
