@@ -74,7 +74,7 @@ function registerWalletWithVerification(context: Context, body: string, address:
 
 export async function resolveAddress(ensName: string) {
   // Gets the Ethereum address associated with an ENS (Ethereum Name Service) name
-  // Explicitly set provider to Ethereum mainnet
+  // Explicitly set provider to Ethereum main-net
   const rpc = new RPCHandler({
     networkId: "100",
     networkName: null,
