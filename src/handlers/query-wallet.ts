@@ -84,11 +84,12 @@ export async function resolveAddress(ensName: string) {
     cacheRefreshCycles: 3,
     runtimeRpcs: null,
     rpcTimeout: 600,
+    tracking: "none",
     proxySettings: { retryCount: 0, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
   });
   console.log("2. resolveAddress");
-  // const provider = await rpc.getFastestRpcProvider();
-  const provider = new ethers.JsonRpcProvider(`https://eth.drpc.org`);
+  const provider = await rpc.getFastestRpcProvider();
+  // const provider = new ethers.JsonRpcProvider(`https://eth.drpc.org`);
   console.log("3. resolveAddress");
   return await provider.resolveName(ensName).catch((err) => {
     console.trace({ err });
