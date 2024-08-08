@@ -81,10 +81,10 @@ export async function resolveAddress(ensName: string) {
     networkName: "ethereum-mainnet",
     networkRpcs: null,
     autoStorage: false,
-    cacheRefreshCycles: null,
+    cacheRefreshCycles: 3,
     runtimeRpcs: null,
-    rpcTimeout: null,
-    proxySettings: { retryCount: 1, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
+    rpcTimeout: 600,
+    proxySettings: { retryCount: 0, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
   });
   console.log("2. resolveAddress");
   const provider = await rpc.getFastestRpcProvider();
