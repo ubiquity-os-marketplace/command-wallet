@@ -79,10 +79,10 @@ export async function resolveAddress(ensName: string) {
   const rpc = new RPCHandler({
     networkId: "100",
     networkName: null,
-    networkRpcs: null,
+    networkRpcs: [{ url: "https://gnosis-pokt.nodies.app" }],
     autoStorage: null,
     cacheRefreshCycles: null,
-    runtimeRpcs: null,
+    runtimeRpcs: ["https://gnosis-pokt.nodies.app"],
     rpcTimeout: null,
     proxySettings: { retryCount: 5, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
   });
