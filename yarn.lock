@@ -2376,10 +2376,10 @@
     "@typescript-eslint/types" "7.13.1"
     eslint-visitor-keys "^3.4.3"
 
-"@ubiquity-dao/rpc-handler@1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@ubiquity-dao/rpc-handler/-/rpc-handler-1.2.3.tgz#1bc87c9cee84307412fdce70cfc089e25067d9cc"
-  integrity sha512-StbfiAlJzC0+mX1amYsCE71Do/hRgVy/5caIAKIite36EodwUU7Nk12BCzYB39BdjbeN/2QGBC9RWJJepqO51g==
+"@ubiquibot/rpc-handler@1.2.3-rc":
+  version "1.2.3-rc"
+  resolved "https://registry.yarnpkg.com/@ubiquibot/rpc-handler/-/rpc-handler-1.2.3-rc.tgz#809da6abf9496c991c164b17f546adc6bda3925e"
+  integrity sha512-mpoQLo31XADd/CLLl0KEQRHw7AWUn5TvcjDC3V1Lv5aC4RxCcHTdZnPLLkEoWRcRw6HHpBKxhWjPOlBJfULrwA==
   dependencies:
     "@ethersproject/providers" "5.7.2"
     axios "^1.7.1"
