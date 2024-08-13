@@ -79,10 +79,10 @@ export async function resolveAddress(ensName: string) {
   const rpc = new RPCHandler({
     networkId: "1",
     networkName: "ethereum-mainnet",
-    networkRpcs: null,
+    networkRpcs: [{ url: "https://eth.drpc.org" }],
     autoStorage: false,
     cacheRefreshCycles: 3,
-    runtimeRpcs: null,
+    runtimeRpcs: ["https://eth.drpc.org"],
     rpcTimeout: 600,
     tracking: "none",
     proxySettings: { retryCount: 0, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
