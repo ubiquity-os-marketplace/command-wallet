@@ -21,7 +21,7 @@ export class CommandParser {
         context.logger.debug(str);
       },
       async writeErr(str: string) {
-        context.logger.info(str);
+        context.logger.warn(str);
       },
       getErrHelpWidth(): number {
         return 0;
