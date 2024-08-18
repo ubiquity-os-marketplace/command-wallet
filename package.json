@@ -36,7 +36,7 @@
     "@octokit/webhooks": "13.2.7",
     "@sinclair/typebox": "0.32.33",
     "@supabase/supabase-js": "2.43.5",
-    "@ubiquibot/rpc-handler": "1.2.4-rc",
+    "@ubiquity-dao/rpc-handler": "1.2.4",
     "commander": "12.1.0",
     "dotenv": "16.4.5",
     "ethers": "6.13.1",
