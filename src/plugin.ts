@@ -20,62 +20,7 @@ export async function plugin(inputs: PluginInputs, env: Env) {
     config: inputs.settings,
     octokit,
     env,
-    logger: {
-      debug(message: string) {
-        const logger = new Logs(LOG_LEVEL.DEBUG);
-        logger.debug(message);
-      },
-      async ok(message: string) {
-        const logger = new Logs(LOG_LEVEL.INFO);
-        logger.ok(message);
-        try {
-          await octokit.issues.createComment({
-            owner: context.payload.repository.owner.login,
-            issue_number: context.payload.issue.number,
-            repo: context.payload.repository.name,
-            body: `\`\`\`diff\n+ ${message}`,
-          });
-        } catch (e) {
-          logger.error(`Failed to post ok comment ${e}`);
-        }
-      },
-      async info(message: string) {
-        const logger = new Logs(LOG_LEVEL.INFO);
-        logger.info(message);
-        try {
-          await octokit.issues.createComment({
-            owner: context.payload.repository.owner.login,
-            issue_number: context.payload.issue.number,
-            repo: context.payload.repository.name,
-            body: `\`\`\`\n# ${message}`,
-          });
-        } catch (e) {
-          await context.logger.error(`Failed to post info comment: ${e}`);
-        }
-      },
-      warn(message) {
-        const logger = new Logs(LOG_LEVEL.ERROR);
-        logger.error(message);
-      },
-      async error(message: string) {
-        const logger = new Logs(LOG_LEVEL.ERROR);
-        logger.error(message);
-        try {
-          await octokit.issues.createComment({
-            owner: context.payload.repository.owner.login,
-            issue_number: context.payload.issue.number,
-            repo: context.payload.repository.name,
-            body: `\`\`\`\n- ${message}`,
-          });
-        } catch (e) {
-          await context.logger.error(`Failed to post error comment ${e}`);
-        }
-      },
-      fatal(message: string) {
-        const logger = new Logs(LOG_LEVEL.ERROR);
-        logger.fatal(message);
-      },
-    },
+    logger: new Logs(LOG_LEVEL.INFO),
     adapters: {} as ReturnType<typeof createAdapters>,
   };
 
@@ -89,14 +34,14 @@ export async function plugin(inputs: PluginInputs, env: Env) {
     } catch (e) {
       if (e instanceof CommanderError) {
         if (e.code !== "commander.unknownCommand") {
-          await context.logger.error(e.message);
+          context.logger.error(e.message);
         }
       } else {
-        await context.logger.error(`${e}`);
+        context.logger.error(`${e}`);
         throw e;
       }
     }
   } else {
-    await context.logger.info(`Unsupported event: ${context.eventName}`);
+    context.logger.info(`Unsupported event: ${context.eventName}`);
   }
 }
