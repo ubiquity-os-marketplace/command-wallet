@@ -169,7 +169,7 @@ export class Wallet extends Super {
     if (walletData.location_id === null) {
       throw new Error("Location ID is null");
     }
-    logger.debug(`Enriching wallet location metadata ${locationMetaData}`);
+    logger.debug("Enriching wallet location metadata", { locationMetaData });
     return this.supabase.from("locations").update(locationMetaData).eq("id", walletData.location_id);
   }
 }
