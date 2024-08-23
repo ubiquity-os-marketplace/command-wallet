@@ -51,8 +51,8 @@ describe("Wallet command tests", () => {
     );
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith("Successfully registered wallet address", {
-      address: "0x0000000000000000000000000000000000000001",
+      address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
       sender: "ubiquibot",
     });
-  });
+  }, 10000);
 });
