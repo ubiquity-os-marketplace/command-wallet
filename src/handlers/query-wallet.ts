@@ -83,7 +83,6 @@ export async function resolveAddress(ensName: string) {
     cacheRefreshCycles: 3,
     runtimeRpcs: null,
     rpcTimeout: 1000,
-    tracking: "none",
     proxySettings: { retryCount: 0, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
   });
   const provider = await rpc.getFirstAvailableRpcProvider();
