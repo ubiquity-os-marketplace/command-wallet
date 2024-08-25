@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { Context } from "../types";
+import { RPCHandler } from "@ubiquity-dao/rpc-handler";
 
 function extractEnsName(text: string) {
   const ensRegex = /^(?=.{3,40}$)([a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/gm;
@@ -73,8 +74,21 @@ function registerWalletWithVerification(context: Context, body: string, address:
 
 export async function resolveAddress(ensName: string) {
   // Gets the Ethereum address associated with an ENS (Ethereum Name Service) name
-  // Explicitly set provider to Ethereum mainnet
-  const provider = new ethers.JsonRpcProvider(`https://eth.drpc.org`);
+  // Explicitly set provider to Ethereum main-net
+  const rpc = new RPCHandler({
+    networkId: "1",
+    networkName: "ethereum-mainnet",
+    networkRpcs: null,
+    autoStorage: false,
+    cacheRefreshCycles: 3,
+    runtimeRpcs: null,
+    rpcTimeout: 1000,
+    proxySettings: { retryCount: 0, retryDelay: 1000, logTier: "verbose", logger: null, strictLogs: true },
+  });
+  const provider = await rpc.getFirstAvailableRpcProvider();
+  if (!provider) {
+    throw new Error("Failed to get a provider.");
+  }
   return await provider.resolveName(ensName).catch((err) => {
     console.trace({ err });
     return null;
