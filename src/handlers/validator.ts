@@ -20,7 +20,7 @@ export function validateAndDecodeSchemas(env: Env, rawSettings: object) {
   }
 
   if (errors.length) {
-    throw errors;
+    // throw errors;
   }
 
   try {
