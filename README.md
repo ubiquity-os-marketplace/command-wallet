@@ -20,12 +20,10 @@ Allows users to register their wallets to collect rewards.
 ## Example configuration
 
 ```yml
-- plugin: ubiquibot/command-wallet
-  name: command-wallet
+- plugin: https://ubiquibot-command-wallet.ubiquity.workers.dev
   id: command-wallet
-  description: "Allows users to register their wallets to collect rewards."
-  command: "/wallet"
-  example: "/wallet ubiquibot.eth"
+  with:
+    registerWalletWithVerification: false
 ```
 
 ###### At this stage, your plugin will fire on your defined events with the required settings passed in from the kernel. You can now start writing your plugin's logic.
