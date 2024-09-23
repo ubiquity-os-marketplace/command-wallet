@@ -19,8 +19,12 @@ export function validateAndDecodeSchemas(env: Env, rawSettings: object) {
     }
   }
 
+  if (errors.length) {
+    throw errors;
+  }
+
   const decodedEnv = Value.Decode(envValidator.schema, env);
   const decodedSettings = Value.Decode(pluginSettingsSchema, settings);
 
-  return { decodedEnv, decodedSettings, errors };
+  return { decodedEnv, decodedSettings };
 }
