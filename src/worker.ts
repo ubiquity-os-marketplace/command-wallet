@@ -15,9 +15,12 @@ export default {
         } else if (request.method === "POST") {
           const webhookPayload = await request.json();
 
-          const result = validateAndDecodeSchemas(env, webhookPayload.settings);
-          if (result instanceof Response) {
-            return result;
+          const { errors } = validateAndDecodeSchemas(env, webhookPayload.settings);
+          if (errors.length) {
+            return new Response(JSON.stringify({ message: `Bad Request: the settings are invalid.`, errors }), {
+              status: 400,
+              headers: { "content-type": "application/json" },
+            });
           }
           return new Response(JSON.stringify({ message: "Schema is valid" }), { status: 200, headers: { "content-type": "application/json" } });
         }
@@ -38,14 +41,17 @@ export default {
 
       const webhookPayload = await request.json();
 
-      const result = validateAndDecodeSchemas(env, webhookPayload.settings);
+      const { errors, decodedSettings, decodedEnv } = validateAndDecodeSchemas(env, webhookPayload.settings);
 
-      if (result instanceof Response) {
-        return result;
+      if (errors.length) {
+        return new Response(JSON.stringify({ message: `Bad Request: the settings are invalid.`, errors }), {
+          status: 400,
+          headers: { "content-type": "application/json" },
+        });
       }
 
-      webhookPayload.settings = result.decodedSettings;
-      await plugin(webhookPayload, env);
+      webhookPayload.settings = decodedSettings;
+      await plugin(webhookPayload, decodedEnv);
       return new Response(JSON.stringify("OK"), { status: 200, headers: { "content-type": "application/json" } });
     } catch (error) {
       return handleUncaughtError(error);
@@ -53,8 +59,11 @@ export default {
   },
 };
 
-function handleUncaughtError(error: unknown) {
-  console.error(error);
+function handleUncaughtError(errors: unknown) {
+  console.error(errors);
   const status = 500;
-  return new Response(JSON.stringify({ error }), { status: status, headers: { "content-type": "application/json" } });
+  return new Response(JSON.stringify({ errors: Array.isArray(errors) ? errors : [errors] }), {
+    status: status,
+    headers: { "content-type": "application/json" },
+  });
 }
