@@ -1,4 +1,4 @@
-import { Value, ValueError } from "@sinclair/typebox/value";
+import { TransformDecodeError, Value, ValueError } from "@sinclair/typebox/value";
 import { Env, envValidator, PluginSettings, pluginSettingsSchema, pluginSettingsValidator } from "../types";
 
 export function validateAndDecodeSchemas(env: Env, rawSettings: object) {
@@ -29,6 +29,9 @@ export function validateAndDecodeSchemas(env: Env, rawSettings: object) {
     return { decodedEnv, decodedSettings };
   } catch (e) {
     console.error("Failed to decode schemas", e);
-    throw { errors: e };
+    if (e instanceof TransformDecodeError) {
+      throw { errors: [e.error] };
+    }
+    throw e;
   }
 }
