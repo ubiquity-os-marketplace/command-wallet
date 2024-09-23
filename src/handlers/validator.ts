@@ -23,8 +23,12 @@ export function validateAndDecodeSchemas(env: Env, rawSettings: object) {
     throw errors;
   }
 
-  const decodedEnv = Value.Decode(envValidator.schema, env);
-  const decodedSettings = Value.Decode(pluginSettingsSchema, settings);
-
-  return { decodedEnv, decodedSettings };
+  try {
+    const decodedEnv = Value.Decode(envValidator.schema, env);
+    const decodedSettings = Value.Decode(pluginSettingsSchema, settings);
+    return { decodedEnv, decodedSettings };
+  } catch (e) {
+    console.error("Failed to decode schemas", e);
+    throw { errors: e };
+  }
 }

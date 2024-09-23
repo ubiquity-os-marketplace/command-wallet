@@ -48,7 +48,7 @@ export default {
 function handleUncaughtError(errors: unknown) {
   console.error(errors);
   const status = 500;
-  return new Response(JSON.stringify({ errors: Array.isArray(errors) ? errors : [errors] }), {
+  return new Response(JSON.stringify({ errors }), {
     status: status,
     headers: { "content-type": "application/json" },
   });
