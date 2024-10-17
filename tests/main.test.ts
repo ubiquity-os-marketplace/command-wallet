@@ -6,6 +6,7 @@ import { db } from "./__mocks__/db";
 import { server } from "./__mocks__/node";
 import commentCreatedPayload from "./__mocks__/payloads/comment-created.json";
 import dbSeed from "./__mocks__/db-seed.json";
+import { Logs } from "@ubiquity-os/ubiquity-os-logger";
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -31,7 +32,7 @@ describe("Wallet command tests", () => {
   });
 
   it("Should link a wallet", async () => {
-    const spy = jest.spyOn(console, "log");
+    const spy = jest.spyOn(Logs.prototype, "ok");
     await plugin(
       {
         eventName: "issue_comment.created",

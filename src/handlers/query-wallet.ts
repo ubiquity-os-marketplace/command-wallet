@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { Context } from "../types";
 import { RPCHandler } from "@ubiquity-dao/rpc-handler";
+import { addCommentToIssue } from "../utils";
 
 function extractEnsName(text: string) {
   const ensRegex = /^(?=.{3,40}$)([a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/gm;
@@ -30,7 +31,10 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (!address) {
-    return context.logger.info("Skipping to register a wallet address because both address/ens doesn't exist");
+    const message = "Skipping to register a wallet address because both address/ens doesn't exist";
+    await addCommentToIssue(context, `\`\`\`diff\n# ${message}`);
+    context.logger.info(message);
+    return;
   }
 
   if (config.registerWalletWithVerification) {
@@ -38,7 +42,10 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (address == ethers.ZeroAddress) {
-    return logger.error("Skipping to register a wallet address because user is trying to set their address to null address");
+    const message = "Skipping to register a wallet address because user is trying to set their address to null address";
+    await addCommentToIssue(context, `\`\`\`diff\n! ${message}`);
+    logger.error(message);
+    return;
   }
 
   // Makes sure that the address is check-summed
@@ -47,7 +54,10 @@ export async function registerWallet(context: Context, body: string) {
   if (payload.comment) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
-    return context.logger.ok("Successfully registered wallet address", { sender, address });
+
+    const message = "Successfully registered wallet address";
+    await addCommentToIssue(context, `\`\`\`diff\n# ${message}`);
+    context.logger.ok(message, { sender, address });
   } else {
     throw new Error("Payload comment is undefined");
   }
@@ -67,7 +77,7 @@ function registerWalletWithVerification(context: Context, body: string, address:
       throw new Error(failedSigLogMsg);
     }
   } catch (e) {
-    context.logger.fatal("Exception thrown by verifyMessage for /wallet: ", e, failedSigLogMsg);
+    context.logger.fatal("Exception thrown by verifyMessage for /wallet: ", { e, failedSigLogMsg });
     throw new Error(failedSigLogMsg);
   }
 }
