@@ -22,18 +22,17 @@ export async function registerWallet(context: Context, body: string) {
   const ensName = extractEnsName(body.replace("/wallet", "").trim());
 
   if (!address && ensName) {
-    context.logger.debug("Trying to resolve address from ENS name", { ensName });
+    logger.debug("Trying to resolve address from ENS name", { ensName });
     address = await resolveAddress(ensName);
     if (!address) {
       throw new Error(`Resolving address from ENS name failed: ${ensName}`);
     }
-    context.logger.debug("Resolved address from ENS name", { ensName, address });
+    logger.debug("Resolved address from ENS name", { ensName, address });
   }
 
   if (!address) {
-    const message = "Skipping to register a wallet address because both address/ens doesn't exist";
-    await addCommentToIssue(context, `\`\`\`diff\n# ${message}`);
-    context.logger.info(message);
+    const logMessage = logger.info("Skipping to register a wallet address because both address/ens doesn't exist");
+    await addCommentToIssue(context, logMessage.logMessage.diff);
     return;
   }
 
@@ -42,9 +41,9 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (address == ethers.ZeroAddress) {
-    const message = "Skipping to register a wallet address because user is trying to set their address to null address";
-    await addCommentToIssue(context, `\`\`\`diff\n! ${message}`);
-    logger.error(message);
+    const logMessage = logger.error("Skipping to register a wallet address because user is trying to set their address to null address");
+    await addCommentToIssue(context, logMessage.logMessage.diff);
+
     return;
   }
 
@@ -55,9 +54,8 @@ export async function registerWallet(context: Context, body: string) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
 
-    const message = "Successfully registered wallet address";
-    await addCommentToIssue(context, `\`\`\`diff\n# ${message}`);
-    context.logger.ok(message, { sender, address });
+    const message = logger.ok("Successfully registered wallet address", { sender, address });
+    await addCommentToIssue(context, message.logMessage.diff);
   } else {
     throw new Error("Payload comment is undefined");
   }

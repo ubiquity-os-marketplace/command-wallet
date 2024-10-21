@@ -19,12 +19,4 @@ export interface Context<T extends SupportedEventsU = SupportedEventsU, TU exten
   config: PluginSettings;
   env: Env;
   logger: Logs;
-  // {
-  //   fatal: (message: unknown, ...optionalParams: unknown[]) => void;
-  //   error: (message: unknown, ...optionalParams: unknown[]) => Promise<void>;
-  //   warn: (message: unknown, ...optionalParams: unknown[]) => void;
-  //   info: (message: unknown, ...optionalParams: unknown[]) => Promise<void>;
-  //   ok: (message: unknown, ...optionalParams: unknown[]) => Promise<void>;
-  //   debug: (message: unknown, ...optionalParams: unknown[]) => void;
-  // };
 }
