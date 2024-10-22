@@ -31,8 +31,7 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (!address) {
-    const logMessage = logger.info("Skipping to register a wallet address because both address/ens doesn't exist");
-    await addCommentToIssue(context, logMessage.logMessage.diff);
+    await addCommentToIssue(context, logger.info("Skipping to register a wallet address because both address/ens doesn't exist").logMessage.diff);
     return;
   }
 
@@ -41,8 +40,10 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (address == ethers.ZeroAddress) {
-    const logMessage = logger.error("Skipping to register a wallet address because user is trying to set their address to null address");
-    await addCommentToIssue(context, logMessage.logMessage.diff);
+    await addCommentToIssue(
+      context,
+      logger.error("Skipping to register a wallet address because user is trying to set their address to null address").logMessage.diff
+    );
 
     return;
   }
@@ -54,8 +55,7 @@ export async function registerWallet(context: Context, body: string) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
 
-    const message = logger.ok("Successfully registered wallet address", { sender, address });
-    await addCommentToIssue(context, message.logMessage.diff);
+    await addCommentToIssue(context, logger.ok("Successfully registered wallet address", { sender, address }).logMessage.diff);
   } else {
     throw new Error("Payload comment is undefined");
   }
