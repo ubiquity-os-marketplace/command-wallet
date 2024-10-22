@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { ethers } from "ethers";
+import { JsonRpcProvider } from "@ethersproject/providers";
 import { plugin } from "../src/plugin";
 import { PluginInputs } from "../src/types";
 import { db } from "./__mocks__/db";
@@ -7,6 +8,7 @@ import { server } from "./__mocks__/node";
 import commentCreatedPayload from "./__mocks__/payloads/comment-created.json";
 import dbSeed from "./__mocks__/db-seed.json";
 import { Logs } from "@ubiquity-os/ubiquity-os-logger";
+import { RPCHandler } from "@ubiquity-dao/rpc-handler";
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -32,6 +34,11 @@ describe("Wallet command tests", () => {
   });
 
   it("Should link a wallet", async () => {
+    jest
+      .spyOn(RPCHandler.prototype, "getFirstAvailableRpcProvider")
+      .mockResolvedValue(new JsonRpcProvider({ url: "https://fastethrpc.com", skipFetchSetup: true }, Number(1)));
+    jest.spyOn(JsonRpcProvider.prototype, "resolveName").mockResolvedValue("0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd");
+
     const spy = jest.spyOn(Logs.prototype, "ok");
     await plugin(
       {
