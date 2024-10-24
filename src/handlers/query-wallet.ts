@@ -50,7 +50,6 @@ export async function registerWallet(context: Context, body: string) {
 
   // Makes sure that the address is check-summed
   address = ethers.getAddress(address);
-
   if (payload.comment) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
