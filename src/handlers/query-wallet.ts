@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { Context } from "../types";
 import { RPCHandler } from "@ubiquity-dao/rpc-handler";
+import { addCommentToIssue } from "../utils";
 
 function extractEnsName(text: string) {
   const ensRegex = /^(?=.{3,40}$)([a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/gm;
@@ -21,16 +22,17 @@ export async function registerWallet(context: Context, body: string) {
   const ensName = extractEnsName(body.replace("/wallet", "").trim());
 
   if (!address && ensName) {
-    context.logger.debug("Trying to resolve address from ENS name", { ensName });
+    logger.debug("Trying to resolve address from ENS name", { ensName });
     address = await resolveAddress(ensName);
     if (!address) {
       throw new Error(`Resolving address from ENS name failed: ${ensName}`);
     }
-    context.logger.debug("Resolved address from ENS name", { ensName, address });
+    logger.debug("Resolved address from ENS name", { ensName, address });
   }
 
   if (!address) {
-    return context.logger.info("Skipping to register a wallet address because both address/ens doesn't exist");
+    await addCommentToIssue(context, logger.info("Skipping to register a wallet address because both address/ens doesn't exist").logMessage.diff);
+    return;
   }
 
   if (config.registerWalletWithVerification) {
@@ -38,16 +40,21 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (address == ethers.ZeroAddress) {
-    return logger.error("Skipping to register a wallet address because user is trying to set their address to null address");
+    await addCommentToIssue(
+      context,
+      logger.error("Skipping to register a wallet address because user is trying to set their address to null address").logMessage.diff
+    );
+
+    return;
   }
 
   // Makes sure that the address is check-summed
   address = ethers.getAddress(address);
-
   if (payload.comment) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
-    return context.logger.ok("Successfully registered wallet address", { sender, address });
+
+    await addCommentToIssue(context, logger.ok("Successfully registered wallet address", { sender, address }).logMessage.diff);
   } else {
     throw new Error("Payload comment is undefined");
   }
@@ -67,7 +74,7 @@ function registerWalletWithVerification(context: Context, body: string, address:
       throw new Error(failedSigLogMsg);
     }
   } catch (e) {
-    context.logger.fatal("Exception thrown by verifyMessage for /wallet: ", e, failedSigLogMsg);
+    context.logger.fatal("Exception thrown by verifyMessage for /wallet: ", { e, failedSigLogMsg });
     throw new Error(failedSigLogMsg);
   }
 }

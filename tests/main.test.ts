@@ -6,6 +6,7 @@ import { db } from "./__mocks__/db";
 import { server } from "./__mocks__/node";
 import commentCreatedPayload from "./__mocks__/payloads/comment-created.json";
 import dbSeed from "./__mocks__/db-seed.json";
+import { Logs } from "@ubiquity-os/ubiquity-os-logger";
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -31,7 +32,7 @@ describe("Wallet command tests", () => {
   });
 
   it("Should link a wallet", async () => {
-    const spy = jest.spyOn(console, "log");
+    const spy = jest.spyOn(Logs.prototype, "ok");
     await plugin(
       {
         eventName: "issue_comment.created",
@@ -50,9 +51,12 @@ describe("Wallet command tests", () => {
       { SUPABASE_URL: process.env.SUPABASE_URL, SUPABASE_KEY: process.env.SUPABASE_KEY }
     );
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenLastCalledWith("Successfully registered wallet address", {
-      address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
-      sender: "ubiquibot",
-    });
+    expect(spy).toHaveBeenLastCalledWith(
+      "Successfully registered wallet address",
+      expect.objectContaining({
+        address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
+        sender: "ubiquibot",
+      })
+    );
   }, 10000);
 });
