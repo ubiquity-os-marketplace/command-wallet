@@ -4,7 +4,7 @@
   "ignorePaths": ["**/*.json", "**/*.css", "node_modules", "**/*.log", "**/*.http", "**/*.toml", "src/types/database.ts"],
   "useGitignore": true,
   "language": "en",
-  "words": ["Nektos", "dataurl", "devpool", "outdir", "servedir", "Supabase", "SUPABASE", "typebox", "ubiquibot", "Smee", "Rpcs"],
+  "words": ["Nektos", "dataurl", "devpool", "outdir", "servedir", "Supabase", "SUPABASE", "typebox", "ubiquibot", "Smee", "Rpcs", "hono"],
   "dictionaries": ["typescript", "node", "software-terms"],
   "import": ["@cspell/dict-typescript/cspell-ext.json", "@cspell/dict-node/cspell-ext.json", "@cspell/dict-software-terms"],
   "ignoreRegExpList": ["[0-9a-fA-F]{6}"]

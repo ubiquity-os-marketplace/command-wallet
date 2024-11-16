@@ -13,6 +13,15 @@ function extractEnsName(text: string) {
   }
 }
 
+export async function handleCommand(context: Context) {
+  const { command } = context;
+  if (!command) {
+    throw new Error("Command is undefined");
+  }
+  const { walletAddress } = command.parameters;
+  await registerWallet(context, walletAddress);
+}
+
 export async function registerWallet(context: Context, body: string) {
   const { payload, config, logger, adapters } = context;
   const sender = payload.sender.login;
