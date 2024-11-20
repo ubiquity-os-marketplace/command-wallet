@@ -7,6 +7,7 @@ import { PluginSettings, pluginSettingsSchema } from "./types/plugin-inputs";
 import manifest from "../manifest.json";
 import { Command } from "./types/command";
 import { plugin } from "./plugin";
+import { Manifest } from "@ubiquity-os/plugin-sdk/manifest";
 
 export default {
   async fetch(request: Request, env: Env, executionCtx?: ExecutionContext) {
@@ -17,8 +18,7 @@ export default {
           adapters: {} as ReturnType<typeof createAdapters>,
         });
       },
-      // @ts-expect-error incorrect types
-      manifest,
+      manifest as Manifest,
       {
         envSchema: envSchema,
         postCommentOnError: true,
