@@ -17,7 +17,7 @@
     "knip": "knip --config .github/knip.ts",
     "knip-ci": "knip --no-exit-code --reporter json --config .github/knip.ts",
     "prepare": "husky install",
-    "test": "jest --setupFiles dotenv/config --coverage",
+    "test": "cross-env NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest --setupFiles dotenv/config --coverage",
     "worker": "wrangler dev --env dev --port 4002",
     "supabase:generate:local": "supabase gen types typescript --local > src/types/database.ts",
     "supabase:generate:remote": "cross-env-shell \"supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/types/database.ts\""
@@ -31,7 +31,7 @@
   ],
   "dependencies": {
     "@octokit/rest": "20.1.1",
-    "@sinclair/typebox": "^0.34.3",
+    "@sinclair/typebox": "0.34.3",
     "@supabase/supabase-js": "2.43.5",
     "@ubiquity-dao/rpc-handler": "1.3.0",
     "@ubiquity-os/plugin-sdk": "^1.0.11",
