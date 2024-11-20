@@ -1,13 +1,10 @@
 {
   "name": "Wallet",
   "description": "Allows users to register their wallets to collect rewards.",
-  "ubiquity:listeners": [
-    "issue_comment.created"
-  ],
+  "ubiquity:listeners": ["issue_comment.created"],
   "skipBotEvents": true,
-  "commands": [
-    {
-      "name": "wallet",
+  "commands": {
+    "wallet": {
       "ubiquity:example": "/wallet ubq.eth",
       "description": "Register your wallet address for payments.",
       "parameters": {
@@ -20,7 +17,7 @@
         }
       }
     }
-  ],
+  },
   "configuration": {
     "type": "object",
     "properties": {
@@ -29,8 +26,6 @@
         "type": "boolean"
       }
     },
-    "required": [
-      "registerWalletWithVerification"
-    ]
+    "required": ["registerWalletWithVerification"]
   }
 }
