@@ -12,9 +12,9 @@ Allows users to register their wallets to collect rewards.
 1. Install the dependencies preferably using `yarn` or `bun`.
 2. Copy `.dev.vars.example` to `.dev.vars` and fill the variables
 3. Generate Supabase types by running
-    ```shell
-    yarn prebuild
-    ```
+   ```shell
+   yarn prebuild
+   ```
 4. Run the project with `yarn wrangler`
 
 ## Example configuration
