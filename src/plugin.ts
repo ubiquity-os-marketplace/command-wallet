@@ -1,36 +1,27 @@
-import { Octokit } from "@octokit/rest";
 import { createClient } from "@supabase/supabase-js";
-import { Logs } from "@ubiquity-os/ubiquity-os-logger";
 import { CommanderError } from "commander";
 import { createAdapters } from "./adapters";
 import { CommandParser } from "./handlers/command-parser";
-import { Env, PluginInputs } from "./types";
 import { Context } from "./types";
 import { addCommentToIssue } from "./utils";
+import { handleCommand } from "./handlers/query-wallet";
 
 /**
  * How a worker executes the plugin.
  */
-export async function plugin(inputs: PluginInputs, env: Env) {
-  const octokit = new Octokit({ auth: inputs.authToken });
-  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
-
-  const context: Context = {
-    eventName: inputs.eventName,
-    payload: inputs.eventPayload,
-    config: inputs.settings,
-    octokit,
-    env,
-    logger: new Logs("info"),
-    adapters: {} as ReturnType<typeof createAdapters>,
-  };
-
+export async function plugin(context: Context) {
+  const supabase = createClient(context.env.SUPABASE_URL, context.env.SUPABASE_KEY);
   context.adapters = createAdapters(supabase, context);
+
+  if (context.command) {
+    await handleCommand(context);
+    return;
+  }
 
   if (context.eventName === "issue_comment.created") {
     const commandParser = new CommandParser(context);
     try {
-      const args = inputs.eventPayload.comment.body.trim().split(/\s+/);
+      const args = context.payload.comment.body.trim().split(/\s+/);
       await commandParser.parse(args);
     } catch (err) {
       if (err instanceof CommanderError) {
