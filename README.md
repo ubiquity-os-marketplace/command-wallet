@@ -12,20 +12,18 @@ Allows users to register their wallets to collect rewards.
 1. Install the dependencies preferably using `yarn` or `bun`.
 2. Copy `.dev.vars.example` to `.dev.vars` and fill the variables
 3. Generate Supabase types by running
-    ```shell
-    yarn prebuild
-    ```
+   ```shell
+   yarn prebuild
+   ```
 4. Run the project with `yarn wrangler`
 
 ## Example configuration
 
 ```yml
-- plugin: ubiquibot/command-wallet
-  name: command-wallet
+- plugin: https://ubiquibot-command-wallet.ubiquity.workers.dev
   id: command-wallet
-  description: "Allows users to register their wallets to collect rewards."
-  command: "/wallet"
-  example: "/wallet ubiquibot.eth"
+  with:
+    registerWalletWithVerification: false
 ```
 
 ###### At this stage, your plugin will fire on your defined events with the required settings passed in from the kernel. You can now start writing your plugin's logic.

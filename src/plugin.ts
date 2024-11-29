@@ -1,95 +1,40 @@
-import { Octokit } from "@octokit/rest";
 import { createClient } from "@supabase/supabase-js";
 import { CommanderError } from "commander";
 import { createAdapters } from "./adapters";
 import { CommandParser } from "./handlers/command-parser";
-import { Env, PluginInputs } from "./types";
 import { Context } from "./types";
+import { addCommentToIssue } from "./utils";
+import { handleCommand } from "./handlers/query-wallet";
 
 /**
  * How a worker executes the plugin.
  */
-export async function plugin(inputs: PluginInputs, env: Env) {
-  const octokit = new Octokit({ auth: inputs.authToken });
-  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
-
-  const context: Context = {
-    eventName: inputs.eventName,
-    payload: inputs.eventPayload,
-    config: inputs.settings,
-    octokit,
-    env,
-    logger: {
-      debug(message: unknown, ...optionalParams: unknown[]) {
-        console.debug(message, ...optionalParams);
-      },
-      async ok(message: unknown, ...optionalParams: unknown[]) {
-        console.log(message, ...optionalParams);
-        try {
-          await octokit.issues.createComment({
-            owner: context.payload.repository.owner.login,
-            issue_number: context.payload.issue.number,
-            repo: context.payload.repository.name,
-            body: `\`\`\`diff\n+ ${message}`,
-          });
-        } catch (e) {
-          console.error("Failed to post ok comment", e);
-        }
-      },
-      async info(message: unknown, ...optionalParams: unknown[]) {
-        console.log(message, ...optionalParams);
-        try {
-          await octokit.issues.createComment({
-            owner: context.payload.repository.owner.login,
-            issue_number: context.payload.issue.number,
-            repo: context.payload.repository.name,
-            body: `\`\`\`diff\n# ${message}`,
-          });
-        } catch (e) {
-          console.error("Failed to post info comment", e);
-        }
-      },
-      warn(message: unknown, ...optionalParams: unknown[]) {
-        console.warn(message, ...optionalParams);
-      },
-      async error(message: unknown, ...optionalParams: unknown[]) {
-        console.error(message, ...optionalParams);
-        try {
-          await octokit.issues.createComment({
-            owner: context.payload.repository.owner.login,
-            issue_number: context.payload.issue.number,
-            repo: context.payload.repository.name,
-            body: `\`\`\`diff\n- ${message} ${optionalParams}`,
-          });
-        } catch (e) {
-          console.error("Failed to post error comment", e);
-        }
-      },
-      fatal(message: unknown, ...optionalParams: unknown[]) {
-        console.error(message, ...optionalParams);
-      },
-    },
-    adapters: {} as ReturnType<typeof createAdapters>,
-  };
-
+export async function plugin(context: Context) {
+  const supabase = createClient(context.env.SUPABASE_URL, context.env.SUPABASE_KEY);
   context.adapters = createAdapters(supabase, context);
+
+  if (context.command) {
+    await handleCommand(context);
+    return;
+  }
 
   if (context.eventName === "issue_comment.created") {
     const commandParser = new CommandParser(context);
     try {
-      const args = inputs.eventPayload.comment.body.trim().split(/\s+/);
+      const args = context.payload.comment.body.trim().split(/\s+/);
       await commandParser.parse(args);
-    } catch (e) {
-      if (e instanceof CommanderError) {
-        if (e.code !== "commander.unknownCommand") {
-          await context.logger.error(e.message);
+    } catch (err) {
+      if (err instanceof CommanderError) {
+        if (err.code !== "commander.unknownCommand") {
+          await addCommentToIssue(context, `\`\`\`diff\n- ${err.message}`);
+          context.logger.error(err.message);
         }
       } else {
-        await context.logger.error(e);
-        throw e;
+        context.logger.error("An error occurred", { err });
+        throw err;
       }
     }
   } else {
-    context.logger.warn(`Unsupported event: ${context.eventName}`);
+    context.logger.error(`Unsupported event: ${context.eventName}`);
   }
 }

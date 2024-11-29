@@ -1,11 +1,30 @@
 {
   "name": "Wallet",
   "description": "Allows users to register their wallets to collect rewards.",
-  "ubiquity:listeners": [ "issue_comment.created" ],
+  "ubiquity:listeners": ["issue_comment.created"],
+  "skipBotEvents": true,
   "commands": {
     "wallet": {
       "ubiquity:example": "/wallet ubq.eth",
-      "description": "Register your wallet address for payments."
+      "description": "Register your wallet address for payments.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "walletAddress": {
+            "description": "Ethereum address or Ethereum Name Service",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "configuration": {
+    "type": "object",
+    "properties": {
+      "registerWalletWithVerification": {
+        "default": false,
+        "type": "boolean"
+      }
     }
   }
 }
