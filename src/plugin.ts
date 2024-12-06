@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { LogReturn } from "@ubiquity-os/ubiquity-os-logger";
 import { CommanderError } from "commander";
 import { createAdapters } from "./adapters";
 import { CommandParser } from "./handlers/command-parser";
@@ -29,7 +30,11 @@ export async function plugin(context: Context) {
           await addCommentToIssue(context, context.logger.error(err.message).logMessage.diff);
         }
       } else {
-        throw context.logger.error(`An error occurred: ${err}`, { err });
+        if (err instanceof LogReturn) {
+          throw err;
+        } else {
+          throw context.logger.error(`An error occurred: ${err}`, { err });
+        }
       }
     }
   } else {
