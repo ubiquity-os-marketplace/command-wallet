@@ -26,12 +26,10 @@ export async function plugin(context: Context) {
     } catch (err) {
       if (err instanceof CommanderError) {
         if (err.code !== "commander.unknownCommand") {
-          await addCommentToIssue(context, `\`\`\`diff\n- ${err.message}`);
-          context.logger.error(err.message);
+          await addCommentToIssue(context, context.logger.error(err.message).logMessage.diff);
         }
       } else {
-        context.logger.error("An error occurred", { err });
-        throw err;
+        throw context.logger.error(`An error occurred: ${err}`, { err });
       }
     }
   } else {
