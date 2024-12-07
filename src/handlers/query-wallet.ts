@@ -22,6 +22,10 @@ export async function handleCommand(context: Context) {
   await registerWallet(context, walletAddress);
 }
 
+export function unregisterWallet(context: Context) {
+  console.log("unregisterWallet");
+}
+
 export async function registerWallet(context: Context, body: string) {
   const { payload, config, logger, adapters } = context;
   const sender = payload.sender.login;
