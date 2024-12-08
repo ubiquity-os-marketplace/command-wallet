@@ -12,14 +12,13 @@ export class CommandParser {
       .command("/wallet")
       .usage("<address>")
       .argument("[address]", "Wallet address to query, e.g. 0x000000000000000000000000000000000000000", this._parseWalletAddress)
-      .option("-u, --unset", "Unlink your wallet from your account")
-      .action((address: string | undefined, options: { unset: boolean }) => {
-        if (options.unset) {
+      .action((address: string) => {
+        if (address === "unset") {
           return unregisterWallet(context);
         } else if (address) {
           return registerWallet(context, address);
         } else {
-          throw new InvalidArgumentError("Wallet address is required, or --unset flag.");
+          throw new InvalidArgumentError("Wallet address is required, or 'unset' to remove your wallet.");
         }
       })
       .helpCommand(false)
