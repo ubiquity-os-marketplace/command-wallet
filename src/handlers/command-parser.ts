@@ -14,7 +14,6 @@ export class CommandParser {
       .argument("[address]", "Wallet address to query, e.g. 0x000000000000000000000000000000000000000", this._parseWalletAddress)
       .option("-u, --unset", "Unlink your wallet from your account")
       .action((address: string | undefined, options: { unset: boolean }) => {
-        console.log(address, options);
         if (options.unset) {
           return unregisterWallet(context);
         } else if (address) {
