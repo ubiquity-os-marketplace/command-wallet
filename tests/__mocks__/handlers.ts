@@ -15,7 +15,7 @@ export const handlers = [
     const idNumber = Number(id.match(/\d+/)?.[0]);
     return HttpResponse.json(db.users.findFirst({ where: { id: { equals: idNumber } } }));
   }),
-  http.get(`${process.env.SUPABASE_URL}/rest/v1/wallets*`, ({ request }) => {
+  http.patch(`${process.env.SUPABASE_URL}/rest/v1/users*`, ({ request }) => {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
 
@@ -23,7 +23,17 @@ export const handlers = [
       return HttpResponse.text("", { status: 400 });
     }
     const idNumber = Number(id.match(/\d+/)?.[0]);
-    return HttpResponse.json(db.wallets.findFirst({ where: { id: { equals: idNumber } } }));
+    return HttpResponse.json(db.users.findFirst({ where: { id: { equals: idNumber } } }));
+  }),
+  http.get(`${process.env.SUPABASE_URL}/rest/v1/wallets*`, ({ request }) => {
+    const url = new URL(request.url);
+    const id = url.searchParams.get("address");
+
+    if (!id) {
+      return HttpResponse.text("", { status: 400 });
+    }
+    const address = id.replace("eq.", "");
+    return HttpResponse.json(db.wallets.findFirst({ where: { address: { equals: address } } }));
   }),
   http.patch(`${process.env.SUPABASE_URL}/rest/v1/wallets*`, async ({ request }) => {
     const url = new URL(request.url);

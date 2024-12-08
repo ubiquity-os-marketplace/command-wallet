@@ -6,7 +6,7 @@
   "commands": {
     "wallet": {
       "ubiquity:example": "/wallet ubq.eth",
-      "description": "Register your wallet address for payments.",
+      "description": "Register your wallet address for payments. Use '/wallet unset' to unlink your wallet.",
       "parameters": {
         "type": "object",
         "properties": {

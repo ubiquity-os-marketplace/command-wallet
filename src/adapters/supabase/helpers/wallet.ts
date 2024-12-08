@@ -6,7 +6,7 @@ import { Super } from "./supabase";
 type WalletRow = Database["public"]["Tables"]["wallets"]["Row"];
 type WalletInsert = Database["public"]["Tables"]["wallets"]["Insert"];
 type UserRow = Database["public"]["Tables"]["users"]["Row"];
-type UserWithWallet = (UserRow & { wallets: WalletRow | null })[];
+type UserWithWallet = UserRow & { wallets: WalletRow | null };
 
 export class Wallet extends Super {
   constructor(supabase: SupabaseClient<Database>, context: Context) {
@@ -21,8 +21,7 @@ export class Wallet extends Super {
   public async upsertWalletAddress(context: Context, address: string) {
     const payload = context.payload;
 
-    const userData = await this._getUserData(payload);
-    const registeredWalletData = await this._getRegisteredWalletData(userData);
+    const registeredWalletData = await this._getRegisteredWalletData(address);
 
     const locationMetaData = this._getLocationMetaData(payload);
 
@@ -42,21 +41,35 @@ export class Wallet extends Super {
     }
   }
 
+  public async unlinkWalletFromUserId(userId: number) {
+    const userData = await this._getUserWithWallet(userId);
+
+    if (!userData.wallet_id) {
+      throw this.context.logger.error("The user does not have an associated wallet to unlink");
+    }
+
+    const { error } = await this.supabase.from("users").update({ wallet_id: null }).eq("id", userData.id);
+
+    if (error) {
+      throw this.context.logger.error(`Could not unlink the wallet: ${error.details}`, error);
+    }
+  }
+
   private async _getUserWithWallet(id: number) {
-    const { data, error } = await this.supabase.from("users").select("*, wallets(*)").filter("id", "eq", id);
-    if (error) throw error;
+    const { data, error } = await this.supabase.from("users").select("*, wallets(*)").filter("id", "eq", id).single();
+    if (error) throw this.context.logger.error(`Could not check the user's wallet: ${error.details}`, error);
     return data;
   }
 
   private _validateAndGetWalletAddress(userWithWallet: UserWithWallet): string {
-    if (userWithWallet[0]?.wallets?.address === undefined) throw new Error("Wallet address is undefined");
-    if (userWithWallet[0]?.wallets?.address === null) throw new Error("Wallet address is null");
-    return userWithWallet[0]?.wallets?.address;
+    if (userWithWallet?.wallets?.address === undefined) throw this.context.logger.error("The wallet address is undefined");
+    if (userWithWallet?.wallets?.address === null) throw this.context.logger.error("The wallet address is null");
+    return userWithWallet?.wallets?.address;
   }
 
   private async _checkIfUserExists(userId: number) {
     const { data, error } = await this.supabase.from("users").select("*").eq("id", userId).maybeSingle();
-    if (error) throw error;
+    if (error) throw this.context.logger.error(`Could not check if the user exists: ${error.details}`, error);
     return data as UserRow;
   }
 
@@ -74,7 +87,7 @@ export class Wallet extends Super {
     const { data: locationData, error: locationError } = await this.supabase.from("locations").insert(locationMetaData).select().single();
 
     if (locationError) {
-      throw new Error(locationError.message);
+      throw this.context.logger.error(`Could not retrieve the location: ${locationError.details}`, locationError);
     }
 
     // Get the ID of the inserted location
@@ -88,35 +101,37 @@ export class Wallet extends Super {
       .single();
 
     if (userError) {
-      throw new Error(userError.message);
+      throw this.context.logger.error(`A new user could not be registered: ${userError.details}`, userError);
     }
 
     return userData as UserRow;
   }
 
-  private async _checkIfWalletExists(userData: UserRow) {
-    if (userData.wallet_id === null) {
+  private async _checkIfWalletExists(wallet: string | number | null) {
+    if (wallet === null) {
       return { data: null, error: null };
     }
-    const { data, error } = await this.supabase.from("wallets").select("*").eq("id", userData.wallet_id).maybeSingle();
-
-    return { data, error };
+    if (typeof wallet === "number") {
+      return this.supabase.from("wallets").select("*").eq("id", wallet).maybeSingle();
+    } else {
+      return this.supabase.from("wallets").select("*").eq("address", wallet).maybeSingle();
+    }
   }
 
   private async _updateWalletId(walletId: number, userId: number) {
     const { error } = await this.supabase.from("users").update({ wallet_id: walletId }).eq("id", userId);
 
     if (error) {
-      throw error;
+      throw this.context.logger.error(`Could not update the wallet: ${error.details}`, error);
     }
   }
 
-  private async _getRegisteredWalletData(userData: UserRow) {
-    const walletResponse = await this._checkIfWalletExists(userData);
+  private async _getRegisteredWalletData(address: string) {
+    const walletResponse = await this._checkIfWalletExists(address);
     const walletData = walletResponse.data;
     const walletError = walletResponse.error;
 
-    if (walletError) throw walletError;
+    if (walletError) throw this.context.logger.error(`Could not get the registered wallet: ${walletError.details}`, walletError);
     return walletData;
   }
 
@@ -138,8 +153,8 @@ export class Wallet extends Super {
     }
   }
 
-  private async _updateExistingWallet(context: Context, { address, locationMetaData, walletData }: UpdateExistingWallet) {
-    await this._updateWalletAddress(walletData.id, address);
+  private async _updateExistingWallet(context: Context, { locationMetaData, walletData, payload }: UpdateExistingWallet) {
+    await this._updateWalletId(walletData.id, payload.sender.id);
     if (walletData.location_id) {
       await this._enrichLocationMetaData(context, walletData, locationMetaData);
     }
@@ -152,7 +167,7 @@ export class Wallet extends Super {
 
     const { data: walletInsertData, error: walletInsertError } = await this.supabase.from("wallets").insert(newWallet).select().single();
 
-    if (walletInsertError) throw walletInsertError;
+    if (walletInsertError) throw this.context.logger.error(`Could not insert the new wallet: ${walletInsertError.details}`, walletInsertError);
     return walletInsertData as WalletRow;
   }
 
@@ -167,7 +182,7 @@ export class Wallet extends Super {
   private async _enrichLocationMetaData(context: Context, walletData: WalletRow, locationMetaData: LocationMetaData) {
     const logger = context.logger;
     if (walletData.location_id === null) {
-      throw new Error("Location ID is null");
+      throw this.context.logger.error("The location ID is null.");
     }
     logger.debug("Enriching wallet location metadata", { locationMetaData });
     return this.supabase.from("locations").update(locationMetaData).eq("id", walletData.location_id);

@@ -1,7 +1,7 @@
 import { Command, InvalidArgumentError } from "commander";
 import packageJson from "../../package.json";
 import { Context } from "../types";
-import { registerWallet } from "./query-wallet";
+import { registerWallet, unregisterWallet } from "./query-wallet";
 
 export class CommandParser {
   readonly _program;
@@ -11,8 +11,16 @@ export class CommandParser {
     program
       .command("/wallet")
       .usage("<address>")
-      .argument("<address>", "Wallet address to query, e.g. 0x000000000000000000000000000000000000000", this._parseWalletAddress)
-      .action((address) => registerWallet(context, address))
+      .argument("[address]", "Wallet address to query, e.g. 0x000000000000000000000000000000000000000", this._parseWalletAddress)
+      .action((address: string) => {
+        if (address === "unset") {
+          return unregisterWallet(context);
+        } else if (address) {
+          return registerWallet(context, address);
+        } else {
+          throw new InvalidArgumentError("Wallet address is required, or 'unset' to remove your wallet.");
+        }
+      })
       .helpCommand(false)
       .exitOverride()
       .version(packageJson.version);
