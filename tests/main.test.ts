@@ -24,6 +24,8 @@ afterEach(() => {
 });
 afterAll(() => server.close());
 
+const eventName = "issue_comment.created";
+
 jest.mock("ethers", () => ({
   ethers: {
     JsonRpcProvider: jest.fn(() => ({
@@ -39,7 +41,7 @@ describe("Wallet command tests", () => {
   it("Should handle /wallet comment", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
     await plugin({
-      eventName: "issue_comment.created",
+      eventName: eventName,
       config: { registerWalletWithVerification: false },
       payload: {
         ...commentCreatedPayload,
@@ -69,7 +71,7 @@ describe("Wallet command tests", () => {
   it("Should handle wallet command", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
     await plugin({
-      eventName: "issue_comment.created",
+      eventName: eventName,
       config: { registerWalletWithVerification: false },
       payload: {
         ...commentCreatedPayload,
@@ -99,5 +101,29 @@ describe("Wallet command tests", () => {
         sender: "ubiquibot",
       })
     );
+  }, 10000);
+
+  it("Should unregister a wallet", async () => {
+    const spy = jest.spyOn(Logs.prototype, "info");
+    await plugin({
+      eventName: eventName,
+      config: { registerWalletWithVerification: false },
+      payload: {
+        ...commentCreatedPayload,
+        comment: {
+          ...commentCreatedPayload.comment,
+          body: "/wallet unset",
+        },
+      },
+      command: null,
+      octokit: new Octokit(),
+      env: {
+        SUPABASE_URL: process.env.SUPABASE_URL,
+        SUPABASE_KEY: process.env.SUPABASE_KEY,
+      },
+      logger: new Logs("info"),
+    } as unknown as Context);
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenLastCalledWith("Successfully unlinked wallet from user @ubiquibot");
   }, 10000);
 });
