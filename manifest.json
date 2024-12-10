@@ -13,6 +13,11 @@
           "walletAddress": {
             "description": "Ethereum address or Ethereum Name Service",
             "type": "string"
+          },
+          "unset": {
+            "description": "Unsets the wallet associated with a user",
+            "type": "boolean",
+            "default": false
           }
         }
       }
