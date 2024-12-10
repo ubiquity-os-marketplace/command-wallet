@@ -35,6 +35,10 @@ jest.mock("ethers", () => ({
   },
 }));
 
+jest.mock("@ubiquity-os/plugin-sdk", () => ({
+  postComment: jest.fn(),
+}));
+
 describe("Wallet command tests", () => {
   beforeEach(() => {});
 
@@ -104,7 +108,7 @@ describe("Wallet command tests", () => {
   }, 10000);
 
   it("Should unregister a wallet", async () => {
-    const spy = jest.spyOn(Logs.prototype, "info");
+    const spy = jest.spyOn(Logs.prototype, "ok");
     await plugin({
       eventName: eventName,
       config: { registerWalletWithVerification: false },
@@ -123,7 +127,7 @@ describe("Wallet command tests", () => {
       },
       logger: new Logs("info"),
     } as unknown as Context);
-    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith("Successfully unlinked wallet from user @ubiquibot");
   }, 10000);
 });
