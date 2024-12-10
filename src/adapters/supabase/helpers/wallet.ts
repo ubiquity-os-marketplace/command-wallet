@@ -51,13 +51,13 @@ export class Wallet extends Super {
     const { error } = await this.supabase.from("users").update({ wallet_id: null }).eq("id", userData.id);
 
     if (error) {
-      throw this.context.logger.error(`Could not unlink the wallet: ${error.details}`, error);
+      throw this.context.logger.error(`Could not unlink the wallet.`, error);
     }
   }
 
   private async _getUserWithWallet(id: number) {
     const { data, error } = await this.supabase.from("users").select("*, wallets(*)").filter("id", "eq", id).single();
-    if (error) throw this.context.logger.error(`Could not check the user's wallet: ${error.details}`, error);
+    if (error) throw this.context.logger.error(`Could not check the user's wallet.`, error);
     return data;
   }
 
@@ -69,7 +69,7 @@ export class Wallet extends Super {
 
   private async _checkIfUserExists(userId: number) {
     const { data, error } = await this.supabase.from("users").select("*").eq("id", userId).maybeSingle();
-    if (error) throw this.context.logger.error(`Could not check if the user exists: ${error.details}`, error);
+    if (error) throw this.context.logger.error(`Could not check if the user exists.`, error);
     return data as UserRow;
   }
 
@@ -101,7 +101,7 @@ export class Wallet extends Super {
       .single();
 
     if (userError) {
-      throw this.context.logger.error(`A new user could not be registered: ${userError.details}`, userError);
+      throw this.context.logger.error(`A new user could not be registered.`, userError);
     }
 
     return userData as UserRow;
@@ -122,7 +122,7 @@ export class Wallet extends Super {
     const { error } = await this.supabase.from("users").update({ wallet_id: walletId }).eq("id", userId);
 
     if (error) {
-      throw this.context.logger.error(`Could not update the wallet: ${error.details}`, error);
+      throw this.context.logger.error(`Could not update the wallet.`, error);
     }
   }
 
@@ -131,7 +131,7 @@ export class Wallet extends Super {
     const walletData = walletResponse.data;
     const walletError = walletResponse.error;
 
-    if (walletError) throw this.context.logger.error(`Could not get the registered wallet: ${walletError.details}`, walletError);
+    if (walletError) throw this.context.logger.error(`Could not get the registered wallet.`, walletError);
     return walletData;
   }
 
@@ -167,7 +167,7 @@ export class Wallet extends Super {
 
     const { data: walletInsertData, error: walletInsertError } = await this.supabase.from("wallets").insert(newWallet).select().single();
 
-    if (walletInsertError) throw this.context.logger.error(`Could not insert the new wallet: ${walletInsertError.details}`, walletInsertError);
+    if (walletInsertError) throw this.context.logger.error(`Could not insert the new wallet.`, walletInsertError);
     return walletInsertData as WalletRow;
   }
 
