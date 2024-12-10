@@ -4,7 +4,6 @@ import { CommanderError } from "commander";
 import { createAdapters } from "./adapters";
 import { CommandParser } from "./handlers/command-parser";
 import { Context } from "./types";
-import { addCommentToIssue } from "./utils";
 import { handleCommand } from "./handlers/query-wallet";
 
 /**
@@ -27,7 +26,7 @@ export async function plugin(context: Context) {
     } catch (err) {
       if (err instanceof CommanderError) {
         if (err.code !== "commander.unknownCommand") {
-          await addCommentToIssue(context, context.logger.error(err.message).logMessage.diff);
+          throw context.logger.error(err.message);
         }
       } else {
         if (err instanceof LogReturn) {
