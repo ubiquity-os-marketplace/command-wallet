@@ -15,7 +15,7 @@ export const handlers = [
     const idNumber = Number(id.match(/\d+/)?.[0]);
     return HttpResponse.json(db.users.findFirst({ where: { id: { equals: idNumber } } }));
   }),
-  http.patch(`${process.env.SUPABASE_URL}/rest/v1/users*`, ({ request }) => {
+  http.patch(`${process.env.SUPABASE_URL}/rest/v1/users*`, async ({ request }) => {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
 
@@ -23,7 +23,8 @@ export const handlers = [
       return HttpResponse.text("", { status: 400 });
     }
     const idNumber = Number(id.match(/\d+/)?.[0]);
-    return HttpResponse.json(db.users.findFirst({ where: { id: { equals: idNumber } } }));
+    const data = (await request.json()) as object;
+    return HttpResponse.json(db.users.update({ data, where: { id: { equals: idNumber } } }));
   }),
   http.get(`${process.env.SUPABASE_URL}/rest/v1/wallets*`, ({ request }) => {
     const url = new URL(request.url);
