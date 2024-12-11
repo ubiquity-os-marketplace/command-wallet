@@ -23,18 +23,14 @@ export class Wallet extends Super {
 
     const registeredWalletData = await this._getRegisteredWalletData(address);
 
-    const locationMetaData = this._getLocationMetaData(payload);
-
     if (!registeredWalletData) {
       await this._registerNewWallet(context, {
         address,
-        locationMetaData,
         payload,
       });
     } else {
       await this._updateExistingWallet(context, {
         address,
-        locationMetaData,
         payload,
         walletData: registeredWalletData,
       });
@@ -77,26 +73,15 @@ export class Wallet extends Super {
     let userData = await this._checkIfUserExists(payload.sender.id);
     if (!userData) {
       const user = payload.sender;
-      userData = await this._registerNewUser(user, this._getLocationMetaData(payload));
+      userData = await this._registerNewUser(user);
     }
     return userData;
   }
 
-  private async _registerNewUser(user: Context["payload"]["sender"], locationMetaData: LocationMetaData) {
-    // Insert the location metadata into the locations table
-    const { data: locationData, error: locationError } = await this.supabase.from("locations").insert(locationMetaData).select().single();
-
-    if (locationError) {
-      throw this.context.logger.error(`Could not retrieve the location: ${locationError.details}`, locationError);
-    }
-
-    // Get the ID of the inserted location
-    const locationId = locationData.id;
-
-    // Register the new user with the location ID
+  private async _registerNewUser(user: Context["payload"]["sender"]) {
     const { data: userData, error: userError } = await this.supabase
       .from("users")
-      .insert([{ id: user.id, location_id: locationId }])
+      .insert([{ id: user.id }])
       .select()
       .single();
 
@@ -135,29 +120,15 @@ export class Wallet extends Super {
     return walletData;
   }
 
-  private _getLocationMetaData(payload: Context["payload"]): LocationMetaData {
-    return {
-      user_id: payload.sender.id,
-      comment_id: payload.comment.id,
-      issue_id: payload.issue.id,
-      repository_id: payload.repository.id,
-      organization_id: payload.organization?.id ?? payload.repository.owner.id,
-    };
-  }
-
-  private async _registerNewWallet(context: Context, { address, locationMetaData, payload }: RegisterNewWallet) {
+  private async _registerNewWallet(context: Context, { address, payload }: RegisterNewWallet) {
+    context.logger.debug(`Registering a new wallet for the user ${payload.sender.id}: ${address}`);
     const walletData = await this._insertNewWallet(address);
     await this._updateWalletId(walletData.id, payload.sender.id);
-    if (walletData.location_id) {
-      await this._enrichLocationMetaData(context, walletData, locationMetaData);
-    }
   }
 
-  private async _updateExistingWallet(context: Context, { locationMetaData, walletData, payload }: UpdateExistingWallet) {
+  private async _updateExistingWallet(context: Context, { walletData, payload }: UpdateExistingWallet) {
+    context.logger.debug(`Updating a new wallet for the user ${payload.sender.id}: ${walletData.address}`);
     await this._updateWalletId(walletData.id, payload.sender.id);
-    if (walletData.location_id) {
-      await this._enrichLocationMetaData(context, walletData, locationMetaData);
-    }
   }
 
   private async _insertNewWallet(address: string): Promise<WalletRow> {
@@ -170,39 +141,13 @@ export class Wallet extends Super {
     if (walletInsertError) throw this.context.logger.error(`Could not insert the new wallet.`, walletInsertError);
     return walletInsertData as WalletRow;
   }
-
-  private async _updateWalletAddress(walletId: number, address: string) {
-    const basicLocationInfo = {
-      address: address,
-    } as WalletRow;
-
-    await this.supabase.from("wallets").update(basicLocationInfo).eq("id", walletId).maybeSingle();
-  }
-
-  private async _enrichLocationMetaData(context: Context, walletData: WalletRow, locationMetaData: LocationMetaData) {
-    const logger = context.logger;
-    if (walletData.location_id === null) {
-      throw this.context.logger.error("The location ID is null.");
-    }
-    logger.debug("Enriching wallet location metadata", { locationMetaData });
-    return this.supabase.from("locations").update(locationMetaData).eq("id", walletData.location_id);
-  }
 }
 
 interface RegisterNewWallet {
   address: string;
   payload: Context["payload"];
-  locationMetaData: LocationMetaData;
 }
 
 interface UpdateExistingWallet extends RegisterNewWallet {
   walletData: WalletRow;
-}
-
-interface LocationMetaData {
-  user_id: number;
-  comment_id: number;
-  issue_id: number;
-  repository_id: number;
-  organization_id: number;
 }
