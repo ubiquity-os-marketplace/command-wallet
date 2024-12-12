@@ -8,12 +8,16 @@ export const handlers = [
   http.get(`${process.env.SUPABASE_URL}/rest/v1/users*`, ({ request }) => {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
+    const walletId = url.searchParams.get("wallet_id");
 
-    if (!id) {
-      return HttpResponse.text("", { status: 400 });
+    if (id) {
+      const idNumber = Number(id.match(/\d+/)?.[0]);
+      return HttpResponse.json(db.users.findFirst({ where: { id: { equals: idNumber } } }));
+    } else if (walletId) {
+      const idNumber = Number(walletId.match(/\d+/)?.[0]);
+      return HttpResponse.json(db.users.findFirst({ where: { wallet_id: { equals: idNumber } } }));
     }
-    const idNumber = Number(id.match(/\d+/)?.[0]);
-    return HttpResponse.json(db.users.findFirst({ where: { id: { equals: idNumber } } }));
+    return HttpResponse.text("", { status: 400 });
   }),
   http.patch(`${process.env.SUPABASE_URL}/rest/v1/users*`, async ({ request }) => {
     const url = new URL(request.url);
@@ -38,7 +42,7 @@ export const handlers = [
   }),
   http.patch(`${process.env.SUPABASE_URL}/rest/v1/wallets*`, async ({ request }) => {
     const url = new URL(request.url);
-    const id = url.searchParams.get("id");
+    const id = url.searchParams.get("id") ?? url.searchParams.get("wallet_id");
 
     if (!id) {
       return HttpResponse.text("", { status: 400 });

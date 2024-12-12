@@ -1,4 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { drop } from "@mswjs/data";
 import { ethers } from "ethers";
 import { plugin } from "../src/plugin";
 import { Context } from "../src/types";
@@ -11,12 +12,6 @@ import { Octokit } from "@octokit/rest";
 
 beforeAll(() => {
   server.listen();
-  for (const dbTable of Object.keys(dbSeed)) {
-    const tableName = dbTable as keyof typeof dbSeed;
-    for (const dbRow of dbSeed[tableName]) {
-      db[tableName].create(dbRow);
-    }
-  }
 });
 afterEach(() => {
   server.resetHandlers();
@@ -40,7 +35,15 @@ jest.mock("@ubiquity-os/plugin-sdk", () => ({
 }));
 
 describe("Wallet command tests", () => {
-  beforeEach(() => {});
+  beforeEach(() => {
+    drop(db);
+    for (const dbTable of Object.keys(dbSeed)) {
+      const tableName = dbTable as keyof typeof dbSeed;
+      for (const dbRow of dbSeed[tableName]) {
+        db[tableName].create(dbRow);
+      }
+    }
+  });
 
   it("Should handle /wallet comment", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
