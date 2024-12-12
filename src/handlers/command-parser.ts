@@ -18,7 +18,9 @@ export class CommandParser {
         } else if (address) {
           return registerWallet(context, address);
         } else {
-          throw new InvalidArgumentError("Wallet address is required, or 'unset' to remove your wallet.");
+          throw new InvalidArgumentError(
+            `Please provide your wallet address after to register it i.e.: \`/wallet 0xYourAddress\`\nWrite \`/wallet unset\` to remove your wallet.`
+          );
         }
       })
       .helpCommand(false)

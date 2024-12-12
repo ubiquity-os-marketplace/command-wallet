@@ -31,7 +31,7 @@ export async function unregisterWallet(context: Context) {
   const sender = payload.sender.id;
   logger.info(`Trying to unlink the wallet for user ${sender}`);
   await adapters.supabase.wallet.unlinkWalletFromUserId(sender);
-  await postComment(context, logger.ok(`Successfully unlinked wallet from user @${payload.sender.login}`));
+  await postComment(context, logger.ok(`Successfully unset wallet`));
 }
 
 export async function registerWallet(context: Context, body: string) {
@@ -71,7 +71,7 @@ export async function registerWallet(context: Context, body: string) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
 
-    await postComment(context, logger.ok("Successfully registered wallet address", { sender, address }));
+    await postComment(context, logger.ok("Successfully set wallet", { sender, address }));
   } else {
     throw new Error("Payload comment is undefined");
   }

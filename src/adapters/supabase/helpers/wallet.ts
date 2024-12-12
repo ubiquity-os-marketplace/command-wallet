@@ -137,7 +137,7 @@ export class Wallet extends Super {
     context.logger.debug(`Updating a new wallet for the user ${payload.sender.id}: ${walletData.address}`);
     const existingLinkToUserWallet = await this._getUserFromWalletId(walletData.id);
     if (existingLinkToUserWallet && existingLinkToUserWallet.id !== context.payload.sender.id) {
-      throw this.context.logger.error(`The wallet is already linked to another user.`, existingLinkToUserWallet);
+      throw this.context.logger.error(`Failed to register wallet because it is already associated with another user.`, existingLinkToUserWallet);
     }
     await this._updateWalletId(walletData.id, payload.sender.id);
   }

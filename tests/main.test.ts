@@ -64,7 +64,7 @@ describe("Wallet command tests", () => {
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith(
-      "Successfully registered wallet address",
+      "Successfully set wallet",
       expect.objectContaining({
         address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
         sender: "ubiquibot",
@@ -99,7 +99,7 @@ describe("Wallet command tests", () => {
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith(
-      "Successfully registered wallet address",
+      "Successfully set wallet",
       expect.objectContaining({
         address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
         sender: "ubiquibot",
@@ -128,6 +128,6 @@ describe("Wallet command tests", () => {
       logger: new Logs("info"),
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenLastCalledWith("Successfully unlinked wallet from user @ubiquibot");
+    expect(spy).toHaveBeenLastCalledWith("Successfully unset wallet");
   }, 10000);
 });
