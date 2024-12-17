@@ -86,6 +86,12 @@ jobs:
           app_id: ${{ env.APP_ID }}
           private_key: ${{ env.APP_PRIVATE_KEY }}
 
+      - name: Format manifest.json using Prettier
+        shell: bash
+        run: |
+          bun add -DE prettier
+          bun prettier --write .
+
       - name: Update manifest.json
         shell: bash
         env:
