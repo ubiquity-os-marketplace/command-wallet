@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Automatic Cloudflare Deploy
     environment: ${{ github.ref == 'refs/heads/main' && 'main' || 'development' }}
-    permissions: write-all
+    permissions:
+      contents: write
 
     steps:
       - name: Setup Node
@@ -68,7 +69,7 @@ jobs:
             const manifestPath = path.resolve("${{ github.workspace }}", './manifest.json');
             const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
-            manifest["url"] = "${{ steps.wrangler_deploy.outputs.deployment-url }}";
+            manifest["homepage_url"] = "${{ steps.wrangler_deploy.outputs.deployment-url }}";
 
             const updatedManifest = JSON.stringify(manifest, null, 2);
             fs.writeFileSync(manifestPath, updatedManifest);
