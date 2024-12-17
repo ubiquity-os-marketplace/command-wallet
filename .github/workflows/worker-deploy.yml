@@ -3,7 +3,7 @@ name: Deploy Worker
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [ "Update Configuration and Build" ]
+    workflows: ["Update Configuration and Build"]
     types:
       - completed
 
