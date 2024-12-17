@@ -97,22 +97,22 @@ jobs:
               const path = require('path');
               const github = require('@actions/github');
               const manifestPath = path.relative('.', 'manifest.json');
-  
+
               async function pushChanges() {
                 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-  
+
                 const context = github.context;
                 const owner = context.repo.owner;
                 const repo = context.repo.repo;
                 const ref = 'heads/${{ github.ref_name }}';
-  
+
                 try {
                   const currentCommit = await octokit.rest.git.getRef({
                     owner,
                     repo,
                     ref
                   });
-  
+
                   console.log('Adding file:', manifestPath);
                   const treeEntries = [
                     {
@@ -128,7 +128,7 @@ jobs:
                     base_tree: currentCommit.data.object.sha,
                     tree: treeEntries,
                   });
-  
+
                   const newCommit = await octokit.rest.git.createCommit({
                     owner,
                     repo,
@@ -136,7 +136,7 @@ jobs:
                     tree: newTree.data.sha,
                     parents: [currentCommit.data.object.sha]
                   });
-  
+
                   await octokit.rest.git.updateRef({
                     owner,
                     repo,
@@ -144,14 +144,14 @@ jobs:
                     sha: newCommit.data.sha,
                     force: true
                   });
-  
+
                   console.log('Changes pushed successfully');
                 } catch (error) {
                   console.error('Error pushing changes:', error);
                   process.exit(1);
                 }
               }
-  
+
               pushChanges();
             "
           else
