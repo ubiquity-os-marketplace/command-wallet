@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Automatic Cloudflare Deploy
     environment: ${{ github.ref == 'refs/heads/main' && 'main' || 'development' }}
+    permissions: write-all
 
     steps:
       - name: Setup Node
