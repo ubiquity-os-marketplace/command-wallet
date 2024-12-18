@@ -100,7 +100,7 @@ jobs:
         with:
           files: |
             manifest.json
-          commit-message: "chore: update manifest.json url"
+          commit-message: "chore: [skip ci] update manifest.json url"
           ref: ${{ github.ref }}
 
       - name: Write Deployment URL to Summary
