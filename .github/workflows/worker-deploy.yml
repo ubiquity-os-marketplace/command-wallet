@@ -87,25 +87,6 @@ jobs:
           app-id: ${{ env.APP_ID }}
           private-key: ${{ env.APP_PRIVATE_KEY }}
 
-      - name: Get GitHub App User ID
-        id: get-user-id
-        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-
-      - name: "Set GitHub user"
-        run: |
-          APP_SLUG="${{ steps.app-token.outputs.app-slug || 'github-actions' }}"
-          USER_ID="${{ steps.get-user-id.outputs.user-id || '' }}"
-
-          if [ -z "$USER_ID" ]; then
-              git config --global user.name "github-actions[bot]"
-              git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          else
-              git config --global user.name "${APP_SLUG}[bot]"
-              git config --global user.email "${USER_ID}+${APP_SLUG}[bot]@users.noreply.github.com"
-          fi
-
       - name: Format manifest.json using Prettier
         shell: bash
         run: |
@@ -119,7 +100,7 @@ jobs:
         with:
           files: |
             manifest.json
-          commit-message: "chore: update manifest.json url"
+          commit-message: "chore: [skip ci] update manifest.json url"
           ref: ${{ github.ref }}
 
       - name: Write Deployment URL to Summary
