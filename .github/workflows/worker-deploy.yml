@@ -102,6 +102,8 @@ jobs:
 
       - name: Update manifest.json
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add "manifest.json"
           echo "Changed files:"
