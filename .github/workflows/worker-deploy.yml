@@ -89,12 +89,18 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      - run: |
+      - name: 'Set GitHub user'
+        run: |
           APP_SLUG="${{ steps.app-token.outputs.app-slug || 'github-actions' }}"
-          USER_ID="${{ steps.get-user-id.outputs.user-id || 'github-actions' }}"
-          
-          git config --global user.name "${APP_SLUG}[bot]"
-          git config --global user.email "${USER_ID}+${APP_SLUG}[bot]@users.noreply.github.com"
+          USER_ID="${{ steps.get-user-id.outputs.user-id || '' }}"
+
+          if [ -z "$USER_ID" ]; then
+              git config --global user.name "github-actions[bot]"
+              git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          else
+              git config --global user.name "${APP_SLUG}[bot]"
+              git config --global user.email "${USER_ID}+${APP_SLUG}[bot]@users.noreply.github.com"
+          fi
 
       - name: Format manifest.json using Prettier
         shell: bash
