@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.2.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.1.0...v1.2.0) (2024-12-18)
+
+
+### Features
+
+* user can unset their wallet or link multiple accounts to the same wallet ([6fa4bb1](https://github.com/ubiquity-os-marketplace/command-wallet/commit/6fa4bb1d976df56d0aec36e766d5198853884c09))
+
+
+### Bug Fixes
+
+* improved error messages ([9c36cf6](https://github.com/ubiquity-os-marketplace/command-wallet/commit/9c36cf6ee68abce95b58effaae72fff4c2bfd509))
+* removed location from wallet DB references ([4d47db8](https://github.com/ubiquity-os-marketplace/command-wallet/commit/4d47db850a6ee3bd00dbc7397247c271cfe6e10c))
+* updated port for http request.http and use bun ([0e9f9a2](https://github.com/ubiquity-os-marketplace/command-wallet/commit/0e9f9a2a77097b1b215168e9826904ab0718f54e))
+* users can only register to a unique wallet ([dd47e9c](https://github.com/ubiquity-os-marketplace/command-wallet/commit/dd47e9cbba77d4be0dbded89d34d74c59a61beae))
+
 ## [1.1.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.0.0...v1.1.0) (2024-12-01)
 
 
