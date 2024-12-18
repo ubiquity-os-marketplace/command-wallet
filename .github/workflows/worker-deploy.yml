@@ -7,6 +7,10 @@ on:
     types:
       - completed
 
+env:
+  APP_ID: ${{ secrets.APP_ID }}
+  APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
 jobs:
   deploy-to-cloudflare:
     runs-on: ubuntu-latest
