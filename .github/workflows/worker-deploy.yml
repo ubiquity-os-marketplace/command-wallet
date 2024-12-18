@@ -93,7 +93,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      - name: 'Set GitHub user'
+      - name: "Set GitHub user"
         run: |
           APP_SLUG="${{ steps.app-token.outputs.app-slug || 'github-actions' }}"
           USER_ID="${{ steps.get-user-id.outputs.user-id || '' }}"
@@ -112,14 +112,15 @@ jobs:
           bun add -DE prettier
           bun prettier --write .
 
-      - name: Update manifest.json
-        shell: bash
-        run: |
-          git add "manifest.json"
-          echo "Changed files:"
-          echo "$(git diff-index --cached --name-only HEAD)"
-          git commit -m "chore: updated manifest.json url"
-          git push
+      - name: Commit file
+        uses: swinton/commit@v2.x
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            manifest.json
+          commit-message: "chore: update manifest.json url"
+          ref: refs/heads/${{ github.ref }}
 
       - name: Write Deployment URL to Summary
         run: |
