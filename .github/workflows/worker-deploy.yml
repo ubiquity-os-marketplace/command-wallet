@@ -120,7 +120,7 @@ jobs:
           files: |
             manifest.json
           commit-message: "chore: update manifest.json url"
-          ref: refs/heads/${{ github.ref }}
+          ref: ${{ github.ref }}
 
       - name: Write Deployment URL to Summary
         run: |
