@@ -21,9 +21,6 @@ jobs:
         with:
           node-version: "20.10.0"
 
-      - name: Enable corepack
-        run: corepack enable
-
       - uses: actions/checkout@v4
 
       - name: Setup Bun
@@ -80,11 +77,21 @@ jobs:
 
       - name: Get GitHub App token
         if: env.APP_ID != '' && env.APP_PRIVATE_KEY != ''
-        uses: tibdex/github-app-token@v1.7.0
-        id: get_installation_token
+        uses: actions/create-github-app-token@v1
+        id: app-token
         with:
-          app_id: ${{ env.APP_ID }}
-          private_key: ${{ env.APP_PRIVATE_KEY }}
+          app-id: ${{ env.APP_ID }}
+          private-key: ${{ env.APP_PRIVATE_KEY }}
+
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      - run: |
+          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>'
 
       - name: Format manifest.json using Prettier
         shell: bash
@@ -94,78 +101,12 @@ jobs:
 
       - name: Update manifest.json
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ steps.get_installation_token.outputs.token || github.token }}
         run: |
           git add "manifest.json"
           echo "Changed files:"
           echo "$(git diff-index --cached --name-only HEAD)"
-          if [ -n "$(git diff-index --cached --name-only HEAD)" ]; then
-            node -e "
-              const fs = require('fs');
-              const path = require('path');
-              const github = require('@actions/github');
-              const manifestPath = path.relative('.', 'manifest.json');
-
-              async function pushChanges() {
-                const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-
-                const context = github.context;
-                const owner = context.repo.owner;
-                const repo = context.repo.repo;
-                const ref = 'heads/${{ github.ref_name }}';
-
-                try {
-                  const currentCommit = await octokit.rest.git.getRef({
-                    owner,
-                    repo,
-                    ref
-                  });
-
-                  console.log('Adding file:', manifestPath);
-                  const treeEntries = [
-                    {
-                      path: manifestPath,
-                      mode: '100644',
-                      type: 'blob',
-                      content: fs.readFileSync(manifestPath, 'utf8'),
-                    }
-                  ];
-                  const newTree = await octokit.rest.git.createTree({
-                    owner,
-                    repo,
-                    base_tree: currentCommit.data.object.sha,
-                    tree: treeEntries,
-                  });
-
-                  const newCommit = await octokit.rest.git.createCommit({
-                    owner,
-                    repo,
-                    message: 'chore: updated manifest.json worker URL',
-                    tree: newTree.data.sha,
-                    parents: [currentCommit.data.object.sha]
-                  });
-
-                  await octokit.rest.git.updateRef({
-                    owner,
-                    repo,
-                    ref,
-                    sha: newCommit.data.sha,
-                    force: true
-                  });
-
-                  console.log('Changes pushed successfully');
-                } catch (error) {
-                  console.error('Error pushing changes:', error);
-                  process.exit(1);
-                }
-              }
-
-              pushChanges();
-            "
-          else
-            echo "No changes to commit"
-          fi
+          git commit -m "chore: updated manifest.json url"
+          git push
 
       - name: Write Deployment URL to Summary
         run: |
