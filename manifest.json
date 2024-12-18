@@ -31,5 +31,6 @@
         "type": "boolean"
       }
     }
-  }
+  },
+  "homepage_url": "https://ubiquity-os-command-wallet-development.ubiquity.workers.dev"
 }
