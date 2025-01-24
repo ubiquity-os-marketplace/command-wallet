@@ -24,8 +24,9 @@ export default {
         envSchema: envSchema,
         postCommentOnError: true,
         settingsSchema: pluginSettingsSchema,
-        logLevel: env.LOG_LEVEL as LogLevel,
+        logLevel: (env.LOG_LEVEL as LogLevel) ?? "info",
         kernelPublicKey: env.KERNEL_PUBLIC_KEY,
+        bypassSignatureVerification: process.env.NODE_ENV === "local",
       }
     ).fetch(request, env, executionCtx);
   },

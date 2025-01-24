@@ -9,7 +9,7 @@
     "node": ">=20.10.0"
   },
   "scripts": {
-    "prebuild": "dotenv -- cross-env yarn supabase:generate:remote",
+    "prebuild": "dotenv -- cross-env bun supabase:generate:remote",
     "format": "run-p format:*",
     "format:lint": "eslint --fix .",
     "format:prettier": "prettier --write .",
@@ -34,7 +34,7 @@
     "@sinclair/typebox": "0.34.3",
     "@supabase/supabase-js": "2.43.5",
     "@ubiquity-dao/rpc-handler": "1.3.0",
-    "@ubiquity-os/plugin-sdk": "^1.1.0",
+    "@ubiquity-os/plugin-sdk": "^2.0.2",
     "@ubiquity-os/ubiquity-os-logger": "^1.3.2",
     "commander": "12.1.0",
     "dotenv": "16.4.5",
@@ -75,7 +75,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "yarn prettier --write",
+      "prettier --write",
       "eslint --fix"
     ],
     "src/**.{ts,json}": [

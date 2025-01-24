@@ -6,13 +6,18 @@
   "commands": {
     "wallet": {
       "ubiquity:example": "/wallet ubq.eth",
-      "description": "Register your wallet address for payments.",
+      "description": "Register your wallet address for payments. Use '/wallet unset' to unlink your wallet.",
       "parameters": {
         "type": "object",
         "properties": {
           "walletAddress": {
             "description": "Ethereum address or Ethereum Name Service",
             "type": "string"
+          },
+          "unset": {
+            "description": "Unsets the wallet associated with a user",
+            "type": "boolean",
+            "default": false
           }
         }
       }
@@ -27,5 +32,6 @@
         "type": "boolean"
       }
     }
-  }
+  },
+  "homepage_url": "https://ubiquity-os-command-wallet-development.ubiquity.workers.dev"
 }

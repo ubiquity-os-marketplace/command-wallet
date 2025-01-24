@@ -1,4 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { drop } from "@mswjs/data";
 import { ethers } from "ethers";
 import { plugin } from "../src/plugin";
 import { Context } from "../src/types";
@@ -11,18 +12,14 @@ import { Octokit } from "@octokit/rest";
 
 beforeAll(() => {
   server.listen();
-  for (const dbTable of Object.keys(dbSeed)) {
-    const tableName = dbTable as keyof typeof dbSeed;
-    for (const dbRow of dbSeed[tableName]) {
-      db[tableName].create(dbRow);
-    }
-  }
 });
 afterEach(() => {
   server.resetHandlers();
   jest.clearAllMocks();
 });
 afterAll(() => server.close());
+
+const eventName = "issue_comment.created";
 
 jest.mock("ethers", () => ({
   ethers: {
@@ -33,13 +30,25 @@ jest.mock("ethers", () => ({
   },
 }));
 
+jest.mock("@ubiquity-os/plugin-sdk", () => ({
+  postComment: jest.fn(),
+}));
+
 describe("Wallet command tests", () => {
-  beforeEach(() => {});
+  beforeEach(() => {
+    drop(db);
+    for (const dbTable of Object.keys(dbSeed)) {
+      const tableName = dbTable as keyof typeof dbSeed;
+      for (const dbRow of dbSeed[tableName]) {
+        db[tableName].create(dbRow);
+      }
+    }
+  });
 
   it("Should handle /wallet comment", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
     await plugin({
-      eventName: "issue_comment.created",
+      eventName: eventName,
       config: { registerWalletWithVerification: false },
       payload: {
         ...commentCreatedPayload,
@@ -58,7 +67,7 @@ describe("Wallet command tests", () => {
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith(
-      "Successfully registered wallet address",
+      "Successfully set wallet",
       expect.objectContaining({
         address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
         sender: "ubiquibot",
@@ -69,7 +78,7 @@ describe("Wallet command tests", () => {
   it("Should handle wallet command", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
     await plugin({
-      eventName: "issue_comment.created",
+      eventName: eventName,
       config: { registerWalletWithVerification: false },
       payload: {
         ...commentCreatedPayload,
@@ -93,11 +102,35 @@ describe("Wallet command tests", () => {
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith(
-      "Successfully registered wallet address",
+      "Successfully set wallet",
       expect.objectContaining({
         address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
         sender: "ubiquibot",
       })
     );
+  }, 10000);
+
+  it("Should unregister a wallet", async () => {
+    const spy = jest.spyOn(Logs.prototype, "ok");
+    await plugin({
+      eventName: eventName,
+      config: { registerWalletWithVerification: false },
+      payload: {
+        ...commentCreatedPayload,
+        comment: {
+          ...commentCreatedPayload.comment,
+          body: "/wallet unset",
+        },
+      },
+      command: null,
+      octokit: new Octokit(),
+      env: {
+        SUPABASE_URL: process.env.SUPABASE_URL,
+        SUPABASE_KEY: process.env.SUPABASE_KEY,
+      },
+      logger: new Logs("info"),
+    } as unknown as Context);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenLastCalledWith("Successfully unset wallet");
   }, 10000);
 });
