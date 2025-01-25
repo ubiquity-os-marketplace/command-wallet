@@ -32,7 +32,7 @@ jest.unstable_mockModule("ethers", () => ({
   },
 }));
 
-jest.mock("@ubiquity-os/plugin-sdk", () => ({
+jest.unstable_mockModule("@ubiquity-os/plugin-sdk", () => ({
   postComment: jest.fn(),
 }));
 
