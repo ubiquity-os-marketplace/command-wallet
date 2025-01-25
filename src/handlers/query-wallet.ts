@@ -1,7 +1,7 @@
-import { RPCHandler } from "@ubiquity-dao/rpc-handler";
 import { postComment } from "@ubiquity-os/plugin-sdk";
 import { ethers } from "ethers";
 import { Context } from "../types";
+import { RPCHandler } from "@ubiquity-dao/rpc-handler";
 
 function extractEnsName(text: string) {
   const ensRegex = /^(?=.{3,40}$)([a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/gm;
@@ -18,8 +18,20 @@ export async function handleCommand(context: Context) {
   if (!command) {
     throw new Error("Command is undefined");
   }
-  const { walletAddress } = command.parameters;
-  await registerWallet(context, walletAddress);
+  const { walletAddress, unset: shouldUnset } = command.parameters;
+  if (shouldUnset) {
+    await unregisterWallet(context);
+  } else {
+    await registerWallet(context, walletAddress);
+  }
+}
+
+export async function unregisterWallet(context: Context) {
+  const { payload, adapters, logger } = context;
+  const sender = payload.sender.id;
+  logger.info(`Trying to unlink the wallet for user ${sender}`);
+  await adapters.supabase.wallet.unlinkWalletFromUserId(sender);
+  await postComment(context, logger.ok(`Successfully unset wallet`));
 }
 
 export async function registerWallet(context: Context, body: string) {
@@ -40,7 +52,12 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (!address) {
-    await postComment(context, logger.info("Skipping to register a wallet address because both address/ens doesn't exist"));
+    await postComment(
+      context,
+      logger.info(
+        "Skipping to register a wallet address because both address/ens doesn't exist. Only Ethereum-compatible (EVM) addresses are supported for payouts"
+      )
+    );
     return;
   }
 
@@ -59,7 +76,7 @@ export async function registerWallet(context: Context, body: string) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
 
-    await postComment(context, logger.ok("Successfully registered wallet address", { sender, address }));
+    await postComment(context, logger.ok("Successfully set wallet", { sender, address }));
   } else {
     throw new Error("Payload comment is undefined");
   }
