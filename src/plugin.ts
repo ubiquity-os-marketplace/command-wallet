@@ -1,10 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
+import { postComment } from "@ubiquity-os/plugin-sdk";
 import { CommanderError } from "commander";
 import { createAdapters } from "./adapters";
 import { CommandParser } from "./handlers/command-parser";
-import { Context } from "./types";
-import { addCommentToIssue } from "./utils";
 import { handleCommand } from "./handlers/query-wallet";
+import { Context } from "./types";
 
 /**
  * How a worker executes the plugin.
@@ -26,7 +26,7 @@ export async function plugin(context: Context) {
     } catch (err) {
       if (err instanceof CommanderError) {
         if (err.code !== "commander.unknownCommand") {
-          await addCommentToIssue(context, `\`\`\`diff\n- ${err.message}`);
+          await postComment(context, context.logger.error(err.message));
           context.logger.error(err.message);
         }
       } else {

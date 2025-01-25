@@ -1,7 +1,7 @@
+import { RPCHandler } from "@ubiquity-dao/rpc-handler";
+import { postComment } from "@ubiquity-os/plugin-sdk";
 import { ethers } from "ethers";
 import { Context } from "../types";
-import { RPCHandler } from "@ubiquity-dao/rpc-handler";
-import { addCommentToIssue } from "../utils";
 
 function extractEnsName(text: string) {
   const ensRegex = /^(?=.{3,40}$)([a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/gm;
@@ -40,7 +40,7 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (!address) {
-    await addCommentToIssue(context, logger.info("Skipping to register a wallet address because both address/ens doesn't exist").logMessage.diff);
+    await postComment(context, logger.info("Skipping to register a wallet address because both address/ens doesn't exist"));
     return;
   }
 
@@ -49,11 +49,7 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (address == ethers.ZeroAddress) {
-    await addCommentToIssue(
-      context,
-      logger.error("Skipping to register a wallet address because user is trying to set their address to null address").logMessage.diff
-    );
-
+    await postComment(context, logger.error("Skipping to register a wallet address because user is trying to set their address to null address"));
     return;
   }
 
@@ -63,7 +59,7 @@ export async function registerWallet(context: Context, body: string) {
     const { wallet } = adapters.supabase;
     await wallet.upsertWalletAddress(context, address);
 
-    await addCommentToIssue(context, logger.ok("Successfully registered wallet address", { sender, address }).logMessage.diff);
+    await postComment(context, logger.ok("Successfully registered wallet address", { sender, address }));
   } else {
     throw new Error("Payload comment is undefined");
   }
