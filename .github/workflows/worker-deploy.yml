@@ -48,12 +48,36 @@ jobs:
             SUPABASE_URL
             SUPABASE_KEY
             CLOUDFLARE_ACCOUNT_ID
-            CLOUDFLARE_API_TOKEN
+            ${{ secrets.KERNEL_PUBLIC_KEY && secrets.KERNEL_PUBLIC_KEY != '' && 'KERNEL_PUBLIC_KEY' || '' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          KERNEL_PUBLIC_KEY: ${{ secrets.KERNEL_PUBLIC_KEY }}
+
+      - name: Get GitHub App token
+        if: env.APP_ID != '' && env.APP_PRIVATE_KEY != ''
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ env.APP_ID }}
+          private-key: ${{ env.APP_PRIVATE_KEY }}
+
+      - name: Format manifest.json using Prettier
+        shell: bash
+        run: |
+          bun add -DE prettier
+          bun prettier --write .
+
+      - name: Commit file
+        uses: swinton/commit@v2.x
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            manifest.json
+          commit-message: "chore: [skip ci] update manifest.json url"
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
 
       - name: Write Deployment URL to Summary
         run: |
