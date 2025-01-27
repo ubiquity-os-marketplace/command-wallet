@@ -1,11 +1,11 @@
 name: Deploy Worker
 
 on:
-  workflow_dispatch:
   workflow_run:
     workflows: ["Update Configuration and Build"]
     types:
       - completed
+  workflow_dispatch:
 
 env:
   APP_ID: ${{ secrets.APP_ID }}
@@ -15,24 +15,18 @@ jobs:
   deploy-to-cloudflare:
     runs-on: ubuntu-latest
     name: Automatic Cloudflare Deploy
-    environment: ${{ github.ref == 'refs/heads/main' && 'main' || 'development' }}
+    environment: ${{ (github.ref == 'refs/heads/main' || github.event.workflow_run.head_branch == 'main') && 'main' || 'development' }}
     permissions:
       contents: write
 
     steps:
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.10.0"
+      - uses: oven-sh/setup-bun@v2
 
       - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
       - name: Update wrangler.toml Name Field
         run: |
-          branch_name=$(echo '${{ github.ref }}' | sed 's#refs/heads/##' | sed 's#[^a-zA-Z0-9]#-#g')
+          branch_name=$(echo '${{ github.event.workflow_run.head_branch || github.ref }}' | sed 's#refs/heads/##' | sed 's#[^a-zA-Z0-9]#-#g')
           # Extract base name from wrangler.toml
           base_name=$(grep '^name = ' wrangler.toml | sed 's/^name = "\(.*\)"$/\1/')
           # Concatenate branch name with base name
@@ -47,20 +41,18 @@ jobs:
         id: wrangler_deploy
         uses: cloudflare/wrangler-action@v3
         with:
-          wranglerVersion: "3.87.0"
+          wranglerVersion: "3.105.0"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           secrets: |
             SUPABASE_URL
             SUPABASE_KEY
             CLOUDFLARE_ACCOUNT_ID
-            CLOUDFLARE_API_TOKEN
             ${{ secrets.KERNEL_PUBLIC_KEY && secrets.KERNEL_PUBLIC_KEY != '' && 'KERNEL_PUBLIC_KEY' || '' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           KERNEL_PUBLIC_KEY: ${{ secrets.KERNEL_PUBLIC_KEY }}
 
       - name: Update manifest.json worker url
@@ -69,12 +61,9 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-
             const manifestPath = path.resolve("${{ github.workspace }}", './manifest.json');
             const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-
             manifest["homepage_url"] = "${{ steps.wrangler_deploy.outputs.deployment-url }}";
-
             const updatedManifest = JSON.stringify(manifest, null, 2);
             fs.writeFileSync(manifestPath, updatedManifest);
             console.log('Updated manifest:', updatedManifest);
@@ -101,7 +90,7 @@ jobs:
           files: |
             manifest.json
           commit-message: "chore: [skip ci] update manifest.json url"
-          ref: ${{ github.ref }}
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
 
       - name: Write Deployment URL to Summary
         run: |

@@ -52,7 +52,12 @@ export async function registerWallet(context: Context, body: string) {
   }
 
   if (!address) {
-    await postComment(context, logger.info("Skipping to register a wallet address because both address/ens doesn't exist"));
+    await postComment(
+      context,
+      logger.info(
+        "Skipping to register a wallet address because both address/ens doesn't exist. Only Ethereum-compatible (EVM) addresses are supported for payouts"
+      )
+    );
     return;
   }
 
