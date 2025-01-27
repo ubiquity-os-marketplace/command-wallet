@@ -1,27 +1,29 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { drop } from "@mswjs/data";
+import { Octokit } from "@octokit/rest";
+import { Logs } from "@ubiquity-os/ubiquity-os-logger";
 import { ethers } from "ethers";
 import { plugin } from "../src/plugin";
 import { Context } from "../src/types";
 import { db } from "./__mocks__/db";
+import dbSeed from "./__mocks__/db-seed.json";
 import { server } from "./__mocks__/node";
 import commentCreatedPayload from "./__mocks__/payloads/comment-created.json";
-import dbSeed from "./__mocks__/db-seed.json";
-import { Logs } from "@ubiquity-os/ubiquity-os-logger";
-import { Octokit } from "@octokit/rest";
 
 beforeAll(() => {
   server.listen();
 });
+
 afterEach(() => {
   server.resetHandlers();
   jest.clearAllMocks();
 });
+
 afterAll(() => server.close());
 
 const eventName = "issue_comment.created";
 
-jest.mock("ethers", () => ({
+jest.unstable_mockModule("ethers", () => ({
   ethers: {
     JsonRpcProvider: jest.fn(() => ({
       resolveName: jest.fn(async () => "0x0000000000000000000000000000000000000001"),
@@ -30,7 +32,7 @@ jest.mock("ethers", () => ({
   },
 }));
 
-jest.mock("@ubiquity-os/plugin-sdk", () => ({
+jest.unstable_mockModule("@ubiquity-os/plugin-sdk", () => ({
   postComment: jest.fn(),
 }));
 
@@ -47,7 +49,7 @@ describe("Wallet command tests", () => {
 
   it("Should handle /wallet comment", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
-    await plugin({
+    const context = {
       eventName: eventName,
       config: { registerWalletWithVerification: false },
       payload: {
@@ -63,8 +65,9 @@ describe("Wallet command tests", () => {
         SUPABASE_URL: process.env.SUPABASE_URL,
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
-      logger: new Logs("info"),
-    } as unknown as Context);
+      logger: new Logs("debug"),
+    } as unknown as Context;
+    await plugin(context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith(
       "Successfully set wallet",
@@ -77,7 +80,7 @@ describe("Wallet command tests", () => {
 
   it("Should handle wallet command", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
-    await plugin({
+    const context = {
       eventName: eventName,
       config: { registerWalletWithVerification: false },
       payload: {
@@ -98,8 +101,9 @@ describe("Wallet command tests", () => {
         SUPABASE_URL: process.env.SUPABASE_URL,
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
-      logger: new Logs("info"),
-    } as unknown as Context);
+      logger: new Logs("debug"),
+    } as unknown as Context;
+    await plugin(context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith(
       "Successfully set wallet",

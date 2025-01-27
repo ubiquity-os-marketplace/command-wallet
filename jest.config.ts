@@ -1,9 +1,6 @@
-import type { Config } from "jest";
-import { config } from "dotenv";
+import { JestConfigWithTsJest } from "ts-jest";
 
-config({ path: ".dev.vars" });
-
-const configuration: Config = {
+module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   roots: ["./tests"],
@@ -12,7 +9,16 @@ const configuration: Config = {
   coverageReporters: ["json", "lcov", "text", "clover", "json-summary"],
   reporters: ["default", "jest-junit", "jest-md-dashboard"],
   coverageDirectory: "coverage",
-  setupFiles: ["dotenv/config"],
-};
-
-export default configuration;
+  extensionsToTreatAsEsm: [".ts"],
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
+  transform: {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        useESM: true,
+      },
+    ],
+  },
+} as JestConfigWithTsJest;
