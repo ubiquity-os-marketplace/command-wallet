@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.2.0...v1.3.0) (2025-01-27)
+
+
+### Features
+
+* specify EVM address support in registerWallet error message ([c8d3036](https://github.com/ubiquity-os-marketplace/command-wallet/commit/c8d30367cbf02d9e3801ab118240b22dc2581cc0))
+
+
+### Bug Fixes
+
+* changed post comment function to use the SDK ([db9573a](https://github.com/ubiquity-os-marketplace/command-wallet/commit/db9573aea7ad4741e0ca161b989082e374b591e0))
+* updated SDK and logger ([4d0825e](https://github.com/ubiquity-os-marketplace/command-wallet/commit/4d0825e1a5a2d44f5c74617f4229e7b67015c08d))
+* updated workflows to update the manifest ([44e4f4d](https://github.com/ubiquity-os-marketplace/command-wallet/commit/44e4f4dec625587d53f0df06bdf1c427404a3706))
+
 ## [1.2.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.1.0...v1.2.0) (2024-12-18)
 
 
