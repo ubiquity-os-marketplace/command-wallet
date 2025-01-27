@@ -55,6 +55,19 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           KERNEL_PUBLIC_KEY: ${{ secrets.KERNEL_PUBLIC_KEY }}
 
+      - name: Update manifest.json worker url
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const manifestPath = path.resolve("${{ github.workspace }}", './manifest.json');
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+            manifest["homepage_url"] = "${{ steps.wrangler_deploy.outputs.deployment-url }}";
+            const updatedManifest = JSON.stringify(manifest, null, 2);
+            fs.writeFileSync(manifestPath, updatedManifest);
+            console.log('Updated manifest:', updatedManifest);
+
       - name: Get GitHub App token
         if: env.APP_ID != '' && env.APP_PRIVATE_KEY != ''
         uses: actions/create-github-app-token@v1
