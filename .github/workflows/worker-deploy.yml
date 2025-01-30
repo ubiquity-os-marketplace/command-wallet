@@ -68,11 +68,6 @@ jobs:
             fs.writeFileSync(manifestPath, updatedManifest);
             console.log('Updated manifest:', updatedManifest);
 
-      - name: print deployment-url
-        env:
-          DEPLOYMENT_URL: ${{ steps.wrangler_deploy.outputs.deployment-url }}
-        run: echo $DEPLOYMENT_URL
-
       - name: Get GitHub App token
         if: env.APP_ID != '' && env.APP_PRIVATE_KEY != ''
         uses: actions/create-github-app-token@v1
