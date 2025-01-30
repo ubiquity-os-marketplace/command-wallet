@@ -39,9 +39,9 @@ jobs:
 
       - name: Deploy with Wrangler
         id: wrangler_deploy
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
-          wranglerVersion: "3.105.0"
+          wranglerVersion: "3.106.0"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           secrets: |
