@@ -28,9 +28,10 @@
     "properties": {
       "registerWalletWithVerification": {
         "default": false,
+        "description": "Validate an Ethers signed message from the user to verify their wallet address",
         "type": "boolean"
       }
     }
   },
-  "homepage_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md"
+  "homepage_url": "https://ubiquity-os-command-wallet-main.ubiquity.workers.dev"
 }
