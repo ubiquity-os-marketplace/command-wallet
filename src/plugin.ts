@@ -2,8 +2,8 @@ import { createClient } from "@supabase/supabase-js";
 import { CommanderError } from "commander";
 import { createAdapters } from "./adapters";
 import { CommandParser } from "./handlers/command-parser";
-import { Context } from "./types";
 import { handleCommand } from "./handlers/query-wallet";
+import { Context } from "./types";
 
 /**
  * How a worker executes the plugin.
