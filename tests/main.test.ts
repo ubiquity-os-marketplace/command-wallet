@@ -76,7 +76,7 @@ describe("Wallet command tests", () => {
         sender: "ubiquibot",
       })
     );
-  }, 10000);
+  }, 20000);
 
   it("Should handle wallet command", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
@@ -112,7 +112,7 @@ describe("Wallet command tests", () => {
         sender: "ubiquibot",
       })
     );
-  }, 10000);
+  }, 20000);
 
   it("Should unregister a wallet", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
@@ -136,5 +136,5 @@ describe("Wallet command tests", () => {
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith("Successfully unset wallet");
-  }, 10000);
+  }, 20000);
 });

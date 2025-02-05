@@ -28,6 +28,7 @@
     "properties": {
       "registerWalletWithVerification": {
         "default": false,
+        "description": "Validate an Ethers signed message from the user to verify their wallet address",
         "type": "boolean"
       }
     }
