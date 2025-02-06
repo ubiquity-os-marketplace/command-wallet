@@ -2,6 +2,68 @@
 
 Allows users to register their wallets to collect rewards.
 
+## Technical Architecture
+
+### Overview
+
+Command Wallet is built as a serverless application using Cloudflare Workers, with a Supabase PostgreSQL database for data persistence. The application processes commands received through GitHub comments, manages wallet addresses, and provides a plugin system for extensibility.
+
+### Key Components
+
+#### 1. Worker (src/worker.ts)
+- Entry point for the Cloudflare Worker
+- Handles incoming HTTP requests
+- Processes GitHub webhook events
+- Manages environment variables and context
+
+#### 2. Command Parser (src/handlers/command-parser.ts)
+- Parses commands from GitHub comments
+- Supports commands like:
+  - Adding wallets
+  - Querying wallet information
+  - Managing wallet metadata
+- Uses regex patterns for command recognition
+- Validates command syntax and parameters
+
+#### 3. Plugin System (src/plugin.ts)
+- Provides extensibility through plugins
+- Plugins can:
+  - Process commands
+  - Add new functionality
+  - Integrate with external services
+- Plugin interface defines:
+  - Command processing
+  - Error handling
+  - Context management
+
+#### 4. Database Layer (src/adapters/supabase)
+- Uses Supabase as the PostgreSQL database provider
+- Schema includes:
+  - Wallet addresses
+  - User associations
+  - Metadata storage
+- Helpers for:
+  - Wallet management
+  - Data validation
+  - Query operations
+
+#### 5. Testing Infrastructure
+- Jest-based test suite
+- Mock data and handlers for:
+  - Database operations
+  - GitHub events
+  - Command processing
+- HTTP request testing capabilities
+
+### Data Flow
+
+1. GitHub comment webhook triggers the Worker
+2. Worker validates the request and extracts command
+3. Command parser identifies and validates the command
+4. Plugin system processes the command
+5. Database operations are performed if needed
+6. Response is sent back to GitHub
+
 ## Prerequisites
 
 - A good understanding of how the [kernel](https://github.com/ubiquity/ubiquibot-kernel) works and how to interact with it.
