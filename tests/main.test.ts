@@ -1,6 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { drop } from "@mswjs/data";
 import { Octokit } from "@octokit/rest";
+import { CommentHandler } from "@ubiquity-os/plugin-sdk";
 import { Logs } from "@ubiquity-os/ubiquity-os-logger";
 import { ethers } from "ethers";
 import { plugin } from "../src/plugin";
@@ -66,6 +67,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("debug"),
+      commentHandler: new CommentHandler(),
     } as unknown as Context;
     await plugin(context);
     expect(spy).toHaveBeenCalledTimes(1);
@@ -102,6 +104,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("debug"),
+      commentHandler: new CommentHandler(),
     } as unknown as Context;
     await plugin(context);
     expect(spy).toHaveBeenCalledTimes(1);
@@ -133,6 +136,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("info"),
+      commentHandler: new CommentHandler(),
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith("Successfully unset wallet");
