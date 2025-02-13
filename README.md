@@ -11,12 +11,14 @@ Command Wallet is built as a serverless application using Cloudflare Workers, wi
 ### Key Components
 
 #### 1. Worker (src/worker.ts)
+
 - Entry point for the Cloudflare Worker
 - Handles incoming HTTP requests
 - Processes GitHub webhook events
 - Manages environment variables and context
 
 #### 2. Command Parser (src/handlers/command-parser.ts)
+
 - Parses commands from GitHub comments
 - Supports commands like:
   - Adding wallets
@@ -26,6 +28,7 @@ Command Wallet is built as a serverless application using Cloudflare Workers, wi
 - Validates command syntax and parameters
 
 #### 3. Plugin System (src/plugin.ts)
+
 - Provides extensibility through plugins
 - Plugins can:
   - Process commands
@@ -37,6 +40,7 @@ Command Wallet is built as a serverless application using Cloudflare Workers, wi
   - Context management
 
 #### 4. Database Layer (src/adapters/supabase)
+
 - Uses Supabase as the PostgreSQL database provider
 - Schema includes:
   - Wallet addresses
@@ -48,6 +52,7 @@ Command Wallet is built as a serverless application using Cloudflare Workers, wi
   - Query operations
 
 #### 5. Testing Infrastructure
+
 - Jest-based test suite
 - Mock data and handlers for:
   - Database operations
