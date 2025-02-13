@@ -8,7 +8,7 @@ import { StaticDecode, Type as T } from "@sinclair/typebox";
  * which are built into the context object from setup().
  */
 export const pluginSettingsSchema = T.Object({
-  registerWalletWithVerification: T.Boolean({ default: false }),
+  registerWalletWithVerification: T.Boolean({ default: false, description: "Validate an Ethers signed message from the user to verify their wallet address" }),
 });
 
 export type PluginSettings = StaticDecode<typeof pluginSettingsSchema>;
