@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.3.0...v1.4.0) (2025-02-13)
+
+
+### Features
+
+* use new SDK version ([e1ab279](https://github.com/ubiquity-os-marketplace/command-wallet/commit/e1ab279115f7a7d415c10b11a7fea3ae8c963322))
+
+
+### Bug Fixes
+
+* formatting ([c776d22](https://github.com/ubiquity-os-marketplace/command-wallet/commit/c776d221c557f16839861d675b905c38b5e2d14b))
+* tests, formatting, delete bun.lockb ([70bad85](https://github.com/ubiquity-os-marketplace/command-wallet/commit/70bad856b932a26a8b492c670da3ff2116c1759f))
+
 ## [1.3.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.2.0...v1.3.0) (2025-01-27)
 
 ### Features
