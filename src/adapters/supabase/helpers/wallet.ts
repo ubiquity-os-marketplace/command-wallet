@@ -22,6 +22,11 @@ export class Wallet extends Super {
   public async upsertWalletAddress(context: Context, address: string) {
     const payload = context.payload;
 
+    let userData = await this._checkIfUserExists(payload.sender.id);
+    if (!userData) {
+      userData = await this._registerNewUser(payload.sender);
+    }
+
     const registeredWalletData = await this._getRegisteredWalletData(address);
 
     if (!registeredWalletData) {
@@ -74,15 +79,6 @@ export class Wallet extends Super {
     const { data, error } = await this.supabase.from("users").select("*").eq("id", userId).maybeSingle();
     if (error) throw this.context.logger.error(`Could not check if the user exists.`, error);
     return data as UserRow;
-  }
-
-  private async _getUserData(payload: Context["payload"]) {
-    let userData = await this._checkIfUserExists(payload.sender.id);
-    if (!userData) {
-      const user = payload.sender;
-      userData = await this._registerNewUser(user);
-    }
-    return userData;
   }
 
   private async _registerNewUser(user: Context["payload"]["sender"]) {
