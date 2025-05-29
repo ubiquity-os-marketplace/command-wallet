@@ -1,6 +1,6 @@
 import { RPCHandler } from "@ubiquity-dao/rpc-handler";
 import { ethers } from "ethers";
-import { Context } from "../types";
+import { Context } from "../types/index";
 
 function extractEnsName(text: string) {
   const ensRegex = /^(?=.{3,40}$)([a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/gm;

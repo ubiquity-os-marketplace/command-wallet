@@ -1,6 +1,6 @@
 import { Command, InvalidArgumentError } from "commander";
 import packageJson from "../../package.json";
-import { Context } from "../types";
+import { Context } from "../types/index";
 import { registerWallet, unregisterWallet } from "./query-wallet";
 
 export class CommandParser {

@@ -1,6 +1,6 @@
 import { createPlugin } from "@ubiquity-os/plugin-sdk";
 import type { ExecutionContext } from "hono";
-import { createAdapters } from "./adapters";
+import { createAdapters } from "./adapters/index";
 import { SupportedEvents } from "./types/context";
 import { Env, envSchema } from "./types/env";
 import { PluginSettings, pluginSettingsSchema } from "./types/plugin-input";
