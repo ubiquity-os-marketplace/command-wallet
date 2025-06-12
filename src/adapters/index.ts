@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Context } from "../types";
+import { Context } from "../types/index";
 import { Wallet } from "./supabase/helpers/wallet";
 
 export function createAdapters(supabaseClient: SupabaseClient, context: Context) {
