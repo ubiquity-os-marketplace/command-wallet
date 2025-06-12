@@ -1,9 +1,7 @@
 {
   "name": "Wallet",
   "description": "Allows users to register their wallets to collect rewards.",
-  "ubiquity:listeners": [
-    "issue_comment.created"
-  ],
+  "ubiquity:listeners": ["issue_comment.created"],
   "skipBotEvents": true,
   "commands": {
     "wallet": {
@@ -35,5 +33,5 @@
       }
     }
   },
-  "homepage_url": "https://command-wallet-development.deno.dev"
+  "homepage_url": "https://ubiquity-os-command-wallet-development.ubiquity.workers.dev"
 }
