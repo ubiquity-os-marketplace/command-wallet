@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.5.0...v1.6.0) (2025-06-13)
+
+
+### Features
+
+* added deno deploy ([fa404c4](https://github.com/ubiquity-os-marketplace/command-wallet/commit/fa404c4deb5e7cd95d802bcdac98cbb2ccb80bdc))
+* deno ([ca6d770](https://github.com/ubiquity-os-marketplace/command-wallet/commit/ca6d770e62f537ab797bb9743003eeaa03739703))
+
 ## [1.5.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.4.0...v1.5.0) (2025-02-16)
 
 
