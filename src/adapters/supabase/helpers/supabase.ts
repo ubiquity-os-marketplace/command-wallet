@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Context } from "../../../types";
+import { Context } from "../../../types/index";
 import { Database } from "../../../types/database";
 
 export class Super {

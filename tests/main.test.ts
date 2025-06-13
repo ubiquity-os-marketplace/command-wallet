@@ -5,7 +5,7 @@ import { CommentHandler } from "@ubiquity-os/plugin-sdk";
 import { Logs } from "@ubiquity-os/ubiquity-os-logger";
 import { ethers } from "ethers";
 import { plugin } from "../src/plugin";
-import { Context } from "../src/types";
+import { Context } from "../src/types/index";
 import { db } from "./__mocks__/db";
 import dbSeed from "./__mocks__/db-seed.json";
 import { server } from "./__mocks__/node";
