@@ -15,6 +15,11 @@ jobs:
       id-token: write
 
     steps:
+      - uses: actions/checkout@v4
+      - uses: ubiquity-os/deno-plugin-adapter@main
+        id: adapter
+        with:
+          pluginEntry: "./worker"
       - uses: ubiquity-os/deno-deploy@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,3 +30,4 @@ jobs:
           token: ${{ secrets.DENO_DEPLOY_TOKEN }}
           action: ${{ github.event_name == 'delete' && 'delete' || 'deploy' }}
           organization: ${{ secrets.DENO_ORG_NAME }}
+          entrypoint: ${{ steps.adapter.outputs.entrypoint }}
