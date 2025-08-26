@@ -1,7 +1,9 @@
 {
   "name": "Wallet",
   "description": "Allows users to register their wallets to collect rewards.",
-  "ubiquity:listeners": ["issue_comment.created"],
+  "ubiquity:listeners": [
+    "issue_comment.created"
+  ],
   "skipBotEvents": true,
   "commands": {
     "wallet": {
