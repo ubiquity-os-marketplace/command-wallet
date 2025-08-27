@@ -4,7 +4,7 @@
   "ubiquity:listeners": [
     "issue_comment.created"
   ],
-  "skipBotEvents": true,
+  "skipBotEvents": false,
   "commands": {
     "wallet": {
       "ubiquity:example": "/wallet ubq.eth",
