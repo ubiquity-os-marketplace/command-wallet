@@ -19,7 +19,8 @@ export async function plugin(context: Context) {
 
   if (context.eventName === "issue_comment.created") {
     if (!context.payload.comment.body.trim().startsWith("/")) {
-      return context.logger.info("Skipping because comment is not a command", { body: context.payload.comment.body });
+      context.logger.info("Skipping because comment is not a command", { body: context.payload.comment.body });
+      return;
     }
     const commandParser = new CommandParser(context);
     try {
