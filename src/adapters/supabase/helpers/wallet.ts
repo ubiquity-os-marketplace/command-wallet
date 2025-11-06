@@ -27,7 +27,7 @@ export class Wallet extends Super {
       userData = await this._registerNewUser(payload.sender);
     }
 
-    const registeredWalletData = await this.getRegisteredWalletData(address);
+    const registeredWalletData = await this._getRegisteredWalletData(address);
 
     if (!registeredWalletData) {
       await this._registerNewWallet(context, {
@@ -114,7 +114,7 @@ export class Wallet extends Super {
     }
   }
 
-  async getRegisteredWalletData(address: string) {
+  private async _getRegisteredWalletData(address: string) {
     const walletResponse = await this.checkIfWalletExists(address);
     const walletData = walletResponse.data;
     const walletError = walletResponse.error;
