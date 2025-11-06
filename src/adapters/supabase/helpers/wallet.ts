@@ -27,7 +27,7 @@ export class Wallet extends Super {
       userData = await this._registerNewUser(payload.sender);
     }
 
-    const registeredWalletData = await this._getRegisteredWalletData(address);
+    const registeredWalletData = await this.getRegisteredWalletData(address);
 
     if (!registeredWalletData) {
       await this._registerNewWallet(context, {
@@ -44,7 +44,7 @@ export class Wallet extends Super {
   }
 
   public async unlinkWalletFromUserId(userId: number) {
-    const userData = await this._getUserFromId(userId);
+    const userData = await this.getUserFromId(userId);
 
     if (!userData?.wallet_id) {
       throw this.context.logger.error("The user does not have an associated wallet to unlink");
@@ -63,7 +63,7 @@ export class Wallet extends Super {
     return data;
   }
 
-  private async _getUserFromId(id: number) {
+  async getUserFromId(id: number) {
     const { data, error } = await this.supabase.from("users").select("*, wallets(*)").filter("id", "eq", id).maybeSingle();
     if (error) throw this.context.logger.error(`Could not get the user from its id.`, error);
     return data;
@@ -95,7 +95,7 @@ export class Wallet extends Super {
     return userData as UserRow;
   }
 
-  private async _checkIfWalletExists(wallet: string | number | null) {
+  async checkIfWalletExists(wallet: string | number | null) {
     if (wallet === null) {
       return { data: null, error: null };
     }
@@ -114,8 +114,8 @@ export class Wallet extends Super {
     }
   }
 
-  private async _getRegisteredWalletData(address: string) {
-    const walletResponse = await this._checkIfWalletExists(address);
+  async getRegisteredWalletData(address: string) {
+    const walletResponse = await this.checkIfWalletExists(address);
     const walletData = walletResponse.data;
     const walletError = walletResponse.error;
 
