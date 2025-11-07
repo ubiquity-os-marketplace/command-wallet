@@ -79,10 +79,10 @@ export async function registerWallet(context: Context, body: string) {
     const userData = await wallet.getUserFromId(payload.sender.id);
 
     if (existingWalletData.data && userData?.wallet_id && existingWalletData.data.id === userData.wallet_id) {
-      await context.commentHandler.postComment(context, logger.info("This wallet address is already registered to your account."));
+      await context.commentHandler.postComment(context, logger.warn("This wallet address is already registered to your account."));
       return;
     } else if (existingWalletData.data && userData?.wallet_id && existingWalletData.data.id !== userData.wallet_id) {
-      await context.commentHandler.postComment(context, logger.error("This wallet address is already registered to another user."));
+      await context.commentHandler.postComment(context, logger.warn("This wallet address is already registered to another user."));
       return;
     }
 
