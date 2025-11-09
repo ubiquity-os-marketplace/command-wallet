@@ -78,16 +78,16 @@ export async function registerWallet(context: Context, body: string) {
     const existingWalletData = await wallet.checkIfWalletExists(address);
     const userData = await wallet.getUserFromId(payload.sender.id);
 
-    if (existingWalletData.data && userData?.wallet_id && existingWalletData.data.id === userData.wallet_id) {
-      await context.commentHandler.postComment(context, logger.warn("This wallet address is already registered to your account."));
-      return;
-    } else if (existingWalletData.data && userData?.wallet_id && existingWalletData.data.id !== userData.wallet_id) {
-      await context.commentHandler.postComment(context, logger.warn("This wallet address is already registered to another user."));
+    if (!existingWalletData.data) {
+      await wallet.upsertWalletAddress(context, address);
+      await context.commentHandler.postComment(context, logger.ok("Successfully set wallet", { sender, address }));
       return;
     }
 
-    await wallet.upsertWalletAddress(context, address);
-    await context.commentHandler.postComment(context, logger.ok("Successfully set wallet", { sender, address }));
+    const isOwnWallet = userData?.wallet_id && existingWalletData.data.id === userData.wallet_id;
+    const message = isOwnWallet ? "This wallet address is already registered to your account." : "This wallet address is already registered to another user.";
+    await context.commentHandler.postComment(context, logger.warn(message));
+    return;
   } else {
     throw new Error("Payload comment is undefined");
   }

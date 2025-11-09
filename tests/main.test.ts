@@ -53,6 +53,7 @@ describe("Wallet command tests", () => {
 
     // Ensure the wallet is not set in the DB before running this test
     db.users.update({ where: { id: { equals: 1 } }, data: { wallet_id: null } });
+    db.wallets.delete({ where: { id: { equals: 1 } } });
 
     const context = {
       eventName: eventName,
@@ -90,6 +91,7 @@ describe("Wallet command tests", () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
     // Ensure the wallet is not set in the DB before running this test
     db.users.update({ where: { id: { equals: 1 } }, data: { wallet_id: null } });
+    db.wallets.delete({ where: { id: { equals: 1 } } });
 
     const context = {
       eventName: eventName,

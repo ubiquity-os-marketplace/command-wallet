@@ -52,12 +52,12 @@ export const handlers = [
     return HttpResponse.json(db.wallets.update({ data, where: { id: { equals: idNumber } } }));
   }),
   http.post(`${process.env.SUPABASE_URL}/rest/v1/wallets*`, async ({ request }) => {
-    const url = new URL(request.url);
-    const id = url.searchParams.get("id") ?? url.searchParams.get("wallet_id");
+    const data = (await request.json()) as { address: string };
 
-    if (!id) {
-      return HttpResponse.text("", { status: 400 });
-    }
+    const allWallets = db.wallets.getAll();
+    const maxId = allWallets.length > 0 ? Math.max(...allWallets.map((w) => w.id)) : 0;
+    const newWallet = db.wallets.create({ ...data, id: maxId + 1 });
+    return HttpResponse.json(newWallet);
   }),
   http.post("https://api.github.com/repos/:owner/:repo/issues/:id/comments", () => HttpResponse.json()),
 ];
