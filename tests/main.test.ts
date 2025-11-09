@@ -51,7 +51,8 @@ describe("Wallet command tests", () => {
   it("Should handle /wallet comment", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
 
-    // first we unset the wallet as the db is seeded with the wallet already set
+    // Ensure the wallet is not set in the DB before running this test
+    db.users.update({ where: { id: { equals: 1 } }, data: { wallet_id: null } });
 
     const context = {
       eventName: eventName,
@@ -60,7 +61,7 @@ describe("Wallet command tests", () => {
         ...commentCreatedPayload,
         comment: {
           ...commentCreatedPayload.comment,
-          body: "/wallet unset",
+          body: "/wallet ubiquibot.eth",
         },
       },
       command: null,
@@ -72,21 +73,9 @@ describe("Wallet command tests", () => {
       logger: new Logs("debug"),
       commentHandler: new CommentHandler(),
     } as unknown as Context;
+
     await plugin(context);
     expect(spy).toHaveBeenCalledTimes(1);
-
-    expect(spy).toHaveBeenLastCalledWith("Successfully unset wallet");
-
-    context.payload.comment.body = "/wallet set my wallet to ubiquibot.eth";
-    context.command = {
-      name: "wallet",
-      parameters: {
-        walletAddress: "ubiquibot.eth",
-        unset: false,
-      },
-    };
-    await plugin(context);
-    expect(spy).toHaveBeenCalledTimes(2);
 
     expect(spy).toHaveBeenLastCalledWith(
       "Successfully set wallet",
@@ -99,10 +88,51 @@ describe("Wallet command tests", () => {
 
   it("Should handle wallet command", async () => {
     const spy = jest.spyOn(Logs.prototype, "ok");
-
-    // first we unset the wallet as the db is seeded with the wallet already set
+    // Ensure the wallet is not set in the DB before running this test
+    db.users.update({ where: { id: { equals: 1 } }, data: { wallet_id: null } });
 
     const context = {
+      eventName: eventName,
+      config: { registerWalletWithVerification: false },
+      payload: {
+        ...commentCreatedPayload,
+        comment: {
+          ...commentCreatedPayload.comment,
+          body: "@UbiquityOS set my wallet to ubiquibot.eth",
+        },
+      },
+      command: {
+        name: "wallet",
+        parameters: {
+          walletAddress: "ubiquibot.eth",
+        },
+      },
+      octokit: new Octokit(),
+      env: {
+        SUPABASE_URL: process.env.SUPABASE_URL,
+        SUPABASE_KEY: process.env.SUPABASE_KEY,
+      },
+      logger: new Logs("debug"),
+      commentHandler: new CommentHandler(),
+    } as unknown as Context;
+
+    await plugin(context);
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    expect(spy).toHaveBeenLastCalledWith(
+      "Successfully set wallet",
+      expect.objectContaining({
+        address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
+        sender: "ubiquibot",
+      })
+    );
+  }, 20000);
+
+  it("should unset a registered wallet", async () => {
+    const okSpy = jest.spyOn(Logs.prototype, "ok");
+    expect(db.users.findFirst({ where: { id: { equals: 1 } } })?.wallet_id).not.toBeNull();
+
+    await plugin({
       eventName: eventName,
       config: { registerWalletWithVerification: false },
       payload: {
@@ -112,7 +142,10 @@ describe("Wallet command tests", () => {
           body: "/wallet unset",
         },
       },
-      command: null,
+      command: {
+        name: "wallet",
+        parameters: { unset: true, walletAddress: "" },
+      },
       octokit: new Octokit(),
       env: {
         SUPABASE_URL: process.env.SUPABASE_URL,
@@ -120,31 +153,10 @@ describe("Wallet command tests", () => {
       },
       logger: new Logs("debug"),
       commentHandler: new CommentHandler(),
-    } as unknown as Context;
-    await plugin(context);
-    expect(spy).toHaveBeenCalledTimes(1);
+    } as unknown as Context);
 
-    expect(spy).toHaveBeenLastCalledWith("Successfully unset wallet");
-
-    // Now set the wallet
-    context.payload.comment.body = "@UbiquityOS set my wallet to ubiquibot.eth";
-    context.command = {
-      name: "wallet",
-      parameters: {
-        walletAddress: "ubiquibot.eth",
-        unset: false,
-      },
-    };
-    await plugin(context);
-    expect(spy).toHaveBeenCalledTimes(2);
-
-    expect(spy).toHaveBeenLastCalledWith(
-      "Successfully set wallet",
-      expect.objectContaining({
-        address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
-        sender: "ubiquibot",
-      })
-    );
+    expect(okSpy).toHaveBeenCalledWith("Successfully unset wallet");
+    expect(db.users.findFirst({ where: { id: { equals: 1 } } })?.wallet_id).toBeNull();
   }, 20000);
 
   it("should warn if the wallet is already registered to the user", async () => {
