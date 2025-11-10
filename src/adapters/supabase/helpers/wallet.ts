@@ -14,7 +14,7 @@ export class Wallet extends Super {
   }
 
   public async getAddress(id: number) {
-    const userWithWallet = await this._getUserFromWalletId(id);
+    const userWithWallet = await this.getUserFromWalletId(id);
     if (!userWithWallet) return null;
     return this._validateAndGetWalletAddress(userWithWallet);
   }
@@ -57,7 +57,7 @@ export class Wallet extends Super {
     }
   }
 
-  private async _getUserFromWalletId(id: number) {
+  async getUserFromWalletId(id: number) {
     const { data, error } = await this.supabase.from("users").select("*, wallets(*)").filter("wallet_id", "eq", id).maybeSingle();
     if (error) throw this.context.logger.error(`Could not get the user from its wallet id.`, error);
     return data;
@@ -131,7 +131,7 @@ export class Wallet extends Super {
 
   private async _updateExistingWallet(context: Context, { walletData, payload }: UpdateExistingWallet) {
     context.logger.debug(`Updating a new wallet for the user ${payload.sender.id}: ${walletData.address}`);
-    const existingLinkToUserWallet = await this._getUserFromWalletId(walletData.id);
+    const existingLinkToUserWallet = await this.getUserFromWalletId(walletData.id);
     if (existingLinkToUserWallet && existingLinkToUserWallet.id !== context.payload.sender.id) {
       throw this.context.logger.error(`Failed to register wallet because it is already associated with another user.`, existingLinkToUserWallet);
     }
