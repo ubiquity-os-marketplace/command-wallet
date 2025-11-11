@@ -75,9 +75,31 @@ export async function registerWallet(context: Context, body: string) {
   address = ethers.getAddress(address);
   if (payload.comment) {
     const { wallet } = adapters.supabase;
-    await wallet.upsertWalletAddress(context, address);
+    const existingWalletData = await wallet.checkIfWalletExists(address);
+    const userData = await wallet.getUserFromId(payload.sender.id);
 
-    await context.commentHandler.postComment(context, logger.ok("Successfully set wallet", { sender, address }));
+    // If the wallet doesn't exist yet, create and link it
+    if (!existingWalletData.data) {
+      await wallet.upsertWalletAddress(context, address);
+      await context.commentHandler.postComment(context, logger.ok("Successfully set wallet", { sender, address }));
+      return;
+    }
+
+    // If the wallet exists and is already linked to this user, inform them
+    const isOwnWallet = userData?.wallet_id && existingWalletData.data.id === userData.wallet_id;
+    if (isOwnWallet) {
+      await context.commentHandler.postComment(context, logger.warn("This wallet address is already registered to your account."));
+    } else {
+      // only actively linked wallets should return a user here
+      const userFromWallet = await wallet.getUserFromWalletId(existingWalletData.data.id);
+      if (!userFromWallet) {
+        // If the wallet exists but is unlinked, link it to the user
+        await wallet.upsertWalletAddress(context, address);
+        await context.commentHandler.postComment(context, logger.ok("Successfully set wallet", { sender, address }));
+      } else {
+        await context.commentHandler.postComment(context, logger.warn("This wallet address is already registered to another user."));
+      }
+    }
   } else {
     throw new Error("Payload comment is undefined");
   }
