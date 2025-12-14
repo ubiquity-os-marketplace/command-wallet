@@ -2,6 +2,7 @@
   "name": "Wallet",
   "description": "Allows users to register their wallets to collect rewards.",
   "skipBotEvents": false,
+  "workflowId": "action.yml",
   "commands": {
     "wallet": {
       "ubiquity:example": "/wallet ubq.eth",
