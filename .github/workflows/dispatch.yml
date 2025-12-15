@@ -1,4 +1,4 @@
-name: "Wallet Action"
+name: "Wallet Dispatch"
 
 on:
   workflow_dispatch:
@@ -34,7 +34,8 @@ jobs:
     permissions: write-all
     environment: ${{ github.ref == 'refs/heads/main' && 'main' || 'development' }}
     steps:
-      - uses: ./action.yml
+      - uses: actions/checkout@v5
+      - uses: ./
         with:
           stateId: ${{ inputs.stateId }}
           eventName: ${{ inputs.eventName }}
