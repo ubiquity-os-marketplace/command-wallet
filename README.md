@@ -128,7 +128,7 @@ A full example can be found [here](https://github.com/ubiquibot/assistive-pricin
 - Ensure the kernel is running and listening for events.
 - Fire an event in/to the repo where the kernel is installed. This can be done in a number of ways, the easiest being via the GitHub UI or using the GitHub API, such as posting a comment, opening an issue, etc in the org/repo where the kernel is installed.
 - The kernel will process the event and dispatch it using the settings defined in your `.ubiquibot-config.yml`.
-- The `compute.yml` workflow will run and execute your plugin's logic.
+- The `action.yml` workflow will run and execute your plugin's logic.
 - You can view the logs in the Actions tab of your repo.
 
 [Nektos Act](https://github.com/nektos/act) - a tool for running GitHub Actions locally.

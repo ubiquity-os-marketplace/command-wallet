@@ -14,7 +14,7 @@ export class Wallet extends Super {
   }
 
   public async getAddress(id: number) {
-    const userWithWallet = await this._getUserFromWalletId(id);
+    const userWithWallet = await this.getUserFromWalletId(id);
     if (!userWithWallet) return null;
     return this._validateAndGetWalletAddress(userWithWallet);
   }
@@ -44,7 +44,7 @@ export class Wallet extends Super {
   }
 
   public async unlinkWalletFromUserId(userId: number) {
-    const userData = await this._getUserFromId(userId);
+    const userData = await this.getUserFromId(userId);
 
     if (!userData?.wallet_id) {
       throw this.context.logger.error("The user does not have an associated wallet to unlink");
@@ -57,13 +57,13 @@ export class Wallet extends Super {
     }
   }
 
-  private async _getUserFromWalletId(id: number) {
+  async getUserFromWalletId(id: number) {
     const { data, error } = await this.supabase.from("users").select("*, wallets(*)").filter("wallet_id", "eq", id).maybeSingle();
     if (error) throw this.context.logger.error(`Could not get the user from its wallet id.`, error);
     return data;
   }
 
-  private async _getUserFromId(id: number) {
+  async getUserFromId(id: number) {
     const { data, error } = await this.supabase.from("users").select("*, wallets(*)").filter("id", "eq", id).maybeSingle();
     if (error) throw this.context.logger.error(`Could not get the user from its id.`, error);
     return data;
@@ -95,7 +95,7 @@ export class Wallet extends Super {
     return userData as UserRow;
   }
 
-  private async _checkIfWalletExists(wallet: string | number | null) {
+  async checkIfWalletExists(wallet: string | number | null) {
     if (wallet === null) {
       return { data: null, error: null };
     }
@@ -115,7 +115,7 @@ export class Wallet extends Super {
   }
 
   private async _getRegisteredWalletData(address: string) {
-    const walletResponse = await this._checkIfWalletExists(address);
+    const walletResponse = await this.checkIfWalletExists(address);
     const walletData = walletResponse.data;
     const walletError = walletResponse.error;
 
@@ -131,7 +131,7 @@ export class Wallet extends Super {
 
   private async _updateExistingWallet(context: Context, { walletData, payload }: UpdateExistingWallet) {
     context.logger.debug(`Updating a new wallet for the user ${payload.sender.id}: ${walletData.address}`);
-    const existingLinkToUserWallet = await this._getUserFromWalletId(walletData.id);
+    const existingLinkToUserWallet = await this.getUserFromWalletId(walletData.id);
     if (existingLinkToUserWallet && existingLinkToUserWallet.id !== context.payload.sender.id) {
       throw this.context.logger.error(`Failed to register wallet because it is already associated with another user.`, existingLinkToUserWallet);
     }
