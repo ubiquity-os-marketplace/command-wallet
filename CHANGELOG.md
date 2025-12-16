@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.6.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.5.0...v1.6.0) (2025-12-15)
+
+
+### Features
+
+* added deno deploy ([fa404c4](https://github.com/ubiquity-os-marketplace/command-wallet/commit/fa404c4deb5e7cd95d802bcdac98cbb2ccb80bdc))
+* deno ([ca6d770](https://github.com/ubiquity-os-marketplace/command-wallet/commit/ca6d770e62f537ab797bb9743003eeaa03739703))
+* enhance wallet registration logic to prevent duplicate associations ([5985eb2](https://github.com/ubiquity-os-marketplace/command-wallet/commit/5985eb2d5d5f2b689b99dcc7831eb212bb7d710e))
+* migrate to action.yml entry point ([7e1100d](https://github.com/ubiquity-os-marketplace/command-wallet/commit/7e1100dadeaff6c61587c9b4602ab15770a80702))
+* migrate to action.yml entry point ([3ec61f5](https://github.com/ubiquity-os-marketplace/command-wallet/commit/3ec61f50a36f09b1a3caee0c84afc5595bc19bc3))
+
+
+### Bug Fixes
+
+* bot events are no longer ignored ([7fff4f1](https://github.com/ubiquity-os-marketplace/command-wallet/commit/7fff4f1cc86aba4703d809dbbbb805dfbcd40d44))
+* improve wallet registration logic and update test setup for wallet commands ([264dff4](https://github.com/ubiquity-os-marketplace/command-wallet/commit/264dff4fad8eaf1825478d7e156d18e7070efd06))
+* release please issue permission ([16db684](https://github.com/ubiquity-os-marketplace/command-wallet/commit/16db684e5e36d58e3cd49de804ad84c336e64808))
+* release please issue permission ([6244ec5](https://github.com/ubiquity-os-marketplace/command-wallet/commit/6244ec537124fd8a39069030af25c8916eba2542))
+* remove unused ubiquity listeners ([a58357f](https://github.com/ubiquity-os-marketplace/command-wallet/commit/a58357f72ec3720c609e4d304daa889becf82062))
+* update logging for wallet registration to use warnings for existing addresses and add test cases ([7c5fc80](https://github.com/ubiquity-os-marketplace/command-wallet/commit/7c5fc809fd798f2ed5f805f403ee7ac4feea98db))
+
 ## [1.5.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.4.0...v1.5.0) (2025-02-16)
 
 
