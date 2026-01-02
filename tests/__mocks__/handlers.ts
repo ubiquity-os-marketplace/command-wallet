@@ -51,5 +51,13 @@ export const handlers = [
     const data = (await request.json()) as object;
     return HttpResponse.json(db.wallets.update({ data, where: { id: { equals: idNumber } } }));
   }),
+  http.post(`${process.env.SUPABASE_URL}/rest/v1/wallets*`, async ({ request }) => {
+    const data = (await request.json()) as { address: string };
+
+    const allWallets = db.wallets.getAll();
+    const maxId = allWallets.length > 0 ? Math.max(...allWallets.map((w) => w.id)) : 0;
+    const newWallet = db.wallets.create({ ...data, id: maxId + 1 });
+    return HttpResponse.json(newWallet);
+  }),
   http.post("https://api.github.com/repos/:owner/:repo/issues/:id/comments", () => HttpResponse.json()),
 ];
