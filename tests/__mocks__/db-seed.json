@@ -4,12 +4,21 @@
       "id": 1,
       "login": "ubiquibot",
       "wallet_id": 1
+    },
+    {
+      "id": 2,
+      "login": "ubiquibot2",
+      "wallet_id": 2
     }
   ],
   "wallets": [
     {
       "id": 1,
       "address": "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd"
+    },
+    {
+      "id": 2,
+      "address": "0x0000000000000000000000000000000000000002"
     }
   ]
 }
