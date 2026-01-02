@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "src/worker.ts",
   "engines": {
-    "node": ">=20.10.0"
+    "node": ">=24.11.0"
   },
   "scripts": {
     "prebuild": "dotenv -- cross-env bun supabase:generate:remote",
@@ -33,7 +33,7 @@
     "@octokit/rest": "20.1.1",
     "@sinclair/typebox": "0.34.3",
     "@supabase/supabase-js": "2.43.5",
-    "@ubiquity-os/plugin-sdk": "^3.7.0",
+    "@ubiquity-os/plugin-sdk": "^3.8.0",
     "@ubiquity-os/ubiquity-os-logger": "^1.4.0",
     "commander": "12.1.0",
     "dotenv": "16.4.5",

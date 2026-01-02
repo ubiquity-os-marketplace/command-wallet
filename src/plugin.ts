@@ -19,7 +19,7 @@ export async function plugin(context: Context) {
 
   if (context.eventName === "issue_comment.created") {
     if (!context.payload.comment.body.trim().startsWith("/")) {
-      context.logger.info("Skipping because comment is not a command", { body: context.payload.comment.body });
+      context.logger.debug("Skipping because comment is not a command", { body: context.payload.comment.body });
       return;
     }
     const commandParser = new CommandParser(context);
@@ -29,13 +29,13 @@ export async function plugin(context: Context) {
     } catch (err) {
       if (err instanceof CommanderError) {
         if (err.code !== "commander.unknownCommand") {
-          throw context.logger.error(err.message);
+          throw context.logger.warn(err.message);
         }
       } else {
         throw err;
       }
     }
   } else {
-    context.logger.error(`Unsupported event: ${context.eventName}`);
+    context.logger.warn(`Unsupported event: ${context.eventName}`);
   }
 }
