@@ -11,6 +11,9 @@ import dbSeed from "./__mocks__/db-seed.json";
 import { server } from "./__mocks__/node";
 import commentCreatedPayload from "./__mocks__/payloads/comment-created.json";
 
+const WALLET_SUCCESS_MESSAGE = "Successfully set wallet";
+const WALLET_OTHER_REGISTRATION_MESSAGE = "This wallet address is already registered to another user.";
+
 beforeAll(() => {
   server.listen();
 });
@@ -79,7 +82,7 @@ describe("Wallet command tests", () => {
     expect(spy).toHaveBeenCalledTimes(1);
 
     expect(spy).toHaveBeenLastCalledWith(
-      "Successfully set wallet",
+      WALLET_SUCCESS_MESSAGE,
       expect.objectContaining({
         address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
         sender: "ubiquibot",
@@ -122,7 +125,7 @@ describe("Wallet command tests", () => {
     expect(spy).toHaveBeenCalledTimes(1);
 
     expect(spy).toHaveBeenLastCalledWith(
-      "Successfully set wallet",
+      WALLET_SUCCESS_MESSAGE,
       expect.objectContaining({
         address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
         sender: "ubiquibot",
@@ -218,7 +221,7 @@ describe("Wallet command tests", () => {
       commentHandler: new CommentHandler(),
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenLastCalledWith("This wallet address is already registered to another user.");
+    expect(spy).toHaveBeenLastCalledWith(WALLET_OTHER_REGISTRATION_MESSAGE);
   }, 20000);
 
   it("should allow re-registering a previously unlinked wallet to the same user", async () => {
@@ -251,7 +254,7 @@ describe("Wallet command tests", () => {
     } as unknown as Context);
 
     expect(okSpy).toHaveBeenCalledWith(
-      "Successfully set wallet",
+      WALLET_SUCCESS_MESSAGE,
       expect.objectContaining({
         address: "0x0000000000000000000000000000000000000003",
         sender: "ubiquibot",
@@ -288,13 +291,13 @@ describe("Wallet command tests", () => {
     } as unknown as Context);
 
     expect(okSpy).toHaveBeenCalledWith(
-      "Successfully set wallet",
+      WALLET_SUCCESS_MESSAGE,
       expect.objectContaining({
         address: "0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd",
         sender: "ubiquibot",
       })
     );
-    expect(warnSpy).not.toHaveBeenCalledWith("This wallet address is already registered to another user.");
+    expect(warnSpy).not.toHaveBeenCalledWith(WALLET_OTHER_REGISTRATION_MESSAGE);
     expect(db.users.findFirst({ where: { id: { equals: 1 } } })?.wallet_id).toBe(1);
   }, 20000);
 
@@ -330,13 +333,13 @@ describe("Wallet command tests", () => {
     } as unknown as Context);
 
     expect(okSpy).not.toHaveBeenCalledWith(
-      "Successfully set wallet",
+      WALLET_SUCCESS_MESSAGE,
       expect.objectContaining({
         address: "0x0000000000000000000000000000000000000002",
         sender: "ubiquibot",
       })
     );
-    expect(warnSpy).toHaveBeenCalledWith("This wallet address is already registered to another user.");
+    expect(warnSpy).toHaveBeenCalledWith(WALLET_OTHER_REGISTRATION_MESSAGE);
     expect(db.users.findFirst({ where: { id: { equals: 1 } } })?.wallet_id).not.toBe(2);
   }, 20000);
 
@@ -351,28 +354,29 @@ describe("Wallet command tests", () => {
       db.wallets.delete({ where: { id: { equals: existing.id } } });
     }
 
-    const contextFactory = () => ({
-      eventName: eventName,
-      config: { registerWalletWithVerification: false },
-      payload: {
-        ...commentCreatedPayload,
-        comment: {
-          ...commentCreatedPayload.comment,
-          body: `/wallet 0x00000000000000000000000000000000000000AA`,
+    const contextFactory = () =>
+      ({
+        eventName: eventName,
+        config: { registerWalletWithVerification: false },
+        payload: {
+          ...commentCreatedPayload,
+          comment: {
+            ...commentCreatedPayload.comment,
+            body: `/wallet 0x00000000000000000000000000000000000000AA`,
+          },
         },
-      },
-      command: {
-        name: "wallet",
-        parameters: { walletAddress: "0x00000000000000000000000000000000000000AA" },
-      },
-      octokit: new Octokit(),
-      env: {
-        SUPABASE_URL: process.env.SUPABASE_URL,
-        SUPABASE_KEY: process.env.SUPABASE_KEY,
-      },
-      logger: new Logs("info"),
-      commentHandler: new CommentHandler(),
-    }) as unknown as Context;
+        command: {
+          name: "wallet",
+          parameters: { walletAddress: "0x00000000000000000000000000000000000000AA" },
+        },
+        octokit: new Octokit(),
+        env: {
+          SUPABASE_URL: process.env.SUPABASE_URL,
+          SUPABASE_KEY: process.env.SUPABASE_KEY,
+        },
+        logger: new Logs("info"),
+        commentHandler: new CommentHandler(),
+      }) as unknown as Context;
 
     const attempts = 5;
     for (let i = 0; i < attempts; i++) {
@@ -380,7 +384,7 @@ describe("Wallet command tests", () => {
     }
 
     expect(okSpy).toHaveBeenCalledWith(
-      "Successfully set wallet",
+      WALLET_SUCCESS_MESSAGE,
       expect.objectContaining({
         address: "0x00000000000000000000000000000000000000AA",
         sender: "ubiquibot",
