@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.10.0"
+          node-version: "24.11.0"
 
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
