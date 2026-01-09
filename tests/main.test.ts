@@ -351,28 +351,29 @@ describe("Wallet command tests", () => {
       db.wallets.delete({ where: { id: { equals: existing.id } } });
     }
 
-    const contextFactory = () => ({
-      eventName: eventName,
-      config: { registerWalletWithVerification: false },
-      payload: {
-        ...commentCreatedPayload,
-        comment: {
-          ...commentCreatedPayload.comment,
-          body: `/wallet 0x00000000000000000000000000000000000000AA`,
+    const contextFactory = () =>
+      ({
+        eventName: eventName,
+        config: { registerWalletWithVerification: false },
+        payload: {
+          ...commentCreatedPayload,
+          comment: {
+            ...commentCreatedPayload.comment,
+            body: `/wallet 0x00000000000000000000000000000000000000AA`,
+          },
         },
-      },
-      command: {
-        name: "wallet",
-        parameters: { walletAddress: "0x00000000000000000000000000000000000000AA" },
-      },
-      octokit: new Octokit(),
-      env: {
-        SUPABASE_URL: process.env.SUPABASE_URL,
-        SUPABASE_KEY: process.env.SUPABASE_KEY,
-      },
-      logger: new Logs("info"),
-      commentHandler: new CommentHandler(),
-    }) as unknown as Context;
+        command: {
+          name: "wallet",
+          parameters: { walletAddress: "0x00000000000000000000000000000000000000AA" },
+        },
+        octokit: new Octokit(),
+        env: {
+          SUPABASE_URL: process.env.SUPABASE_URL,
+          SUPABASE_KEY: process.env.SUPABASE_KEY,
+        },
+        logger: new Logs("info"),
+        commentHandler: new CommentHandler(),
+      }) as unknown as Context;
 
     const attempts = 5;
     for (let i = 0; i < attempts; i++) {
