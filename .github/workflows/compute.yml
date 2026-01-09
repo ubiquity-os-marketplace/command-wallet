@@ -1,4 +1,3 @@
-
 on:
   workflow_dispatch:
     inputs:
@@ -26,7 +25,6 @@ on:
 
 jobs:
   compute:
-
     runs-on: ubuntu-latest
     permissions: write-all
     environment: ${{ github.ref == 'refs/heads/main' && 'main' || 'development' }}
