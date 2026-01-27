@@ -47,7 +47,7 @@ export class Wallet extends Super {
     const userData = await this.getUserFromId(userId);
 
     if (!userData?.wallet_id) {
-      throw this.context.logger.error("The user does not have an associated wallet to unlink");
+      throw this.context.logger.warn("The user does not have an associated wallet to unlink");
     }
 
     const { error } = await this.supabase.from("users").update({ wallet_id: null }).eq("id", userData.id);
@@ -124,16 +124,16 @@ export class Wallet extends Super {
   }
 
   private async _registerNewWallet(context: Context, { address, payload }: RegisterNewWallet) {
-    context.logger.debug(`Registering a new wallet for the user ${payload.sender.id}: ${address}`);
+    context.logger.info(`Registering a new wallet for the user ${payload.sender.id}: ${address}`);
     const walletData = await this._insertNewWallet(address);
     await this._updateWalletId(walletData.id, payload.sender.id);
   }
 
   private async _updateExistingWallet(context: Context, { walletData, payload }: UpdateExistingWallet) {
-    context.logger.debug(`Updating a new wallet for the user ${payload.sender.id}: ${walletData.address}`);
+    context.logger.info(`Updating a new wallet for the user ${payload.sender.id}: ${walletData.address}`);
     const existingLinkToUserWallet = await this.getUserFromWalletId(walletData.id);
     if (existingLinkToUserWallet && existingLinkToUserWallet.id !== context.payload.sender.id) {
-      throw this.context.logger.error(`Failed to register wallet because it is already associated with another user.`, existingLinkToUserWallet);
+      throw this.context.logger.warn(`Failed to register wallet because it is already associated with another user.`, existingLinkToUserWallet);
     }
     await this._updateWalletId(walletData.id, payload.sender.id);
   }

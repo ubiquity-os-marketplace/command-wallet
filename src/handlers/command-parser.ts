@@ -28,10 +28,10 @@ export class CommandParser {
       .version(packageJson.version);
     program.configureOutput({
       async writeOut(str: string) {
-        context.logger.debug(str);
+        context.logger.info(str);
       },
       async writeErr(str: string) {
-        context.logger.error(str);
+        context.logger.warn(str);
       },
       getErrHelpWidth(): number {
         return 0;
