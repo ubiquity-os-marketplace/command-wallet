@@ -6,8 +6,8 @@ export const commandSchema = T.Object({
     examples: ["/wallet ubq.eth"],
   }),
   parameters: T.Object({
-    walletAddress: T.String(),
-    unset: T.Boolean({ default: false }),
+    walletAddress: T.String({ description: "Wallet address or ENS name to register for payouts.", examples: ["ubq.eth"] }),
+    unset: T.Boolean({ default: false, description: "Set to true to unlink the currently registered wallet.", examples: [true] }),
   }),
 });
 
