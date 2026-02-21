@@ -34,6 +34,5 @@
       }
     }
   },
-  "homepage_url": "https://command-wallet-main.deno.dev",
-  "short_name": "ubiquity-os-marketplace/command-wallet@development"
+  "homepage_url": "https://command-wallet-main.deno.dev"
 }
