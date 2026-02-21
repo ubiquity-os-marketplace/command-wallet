@@ -1,6 +1,6 @@
 {
   "name": "command-wallet",
-  "short_name": "ubiquity-os-marketplace/command-wallet@development",
+  "short_name": "ubiquity-os-marketplace/command-wallet@main",
   "description": "Allows users to register their wallets to collect rewards.",
   "commands": {
     "wallet": {
