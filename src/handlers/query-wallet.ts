@@ -52,7 +52,7 @@ export async function registerWallet(context: Context, body: string) {
   if (!address) {
     await context.commentHandler.postComment(
       context,
-      logger.info(
+      logger.warn(
         "Skipping to register a wallet address because both address/ens doesn't exist. Only Ethereum-compatible (EVM) addresses are supported for payouts"
       )
     );
@@ -66,7 +66,7 @@ export async function registerWallet(context: Context, body: string) {
   if (address == ethers.ZeroAddress) {
     await context.commentHandler.postComment(
       context,
-      logger.error("Skipping to register a wallet address because user is trying to set their address to null address")
+      logger.warn("Skipping to register a wallet address because user is trying to set their address to null address")
     );
     return;
   }
