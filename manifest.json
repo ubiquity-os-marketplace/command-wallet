@@ -1,27 +1,9 @@
 {
-  "name": "Wallet",
+  "name": "command-wallet",
+  "short_name": "ubiquity-os-marketplace/command-wallet@feat/320-workflow-artifact-migration",
   "description": "Allows users to register their wallets to collect rewards.",
+  "ubiquity:listeners": [],
   "skipBotEvents": false,
-  "commands": {
-    "wallet": {
-      "ubiquity:example": "/wallet ubq.eth",
-      "description": "Register your wallet address for payments. Use '/wallet unset' to unlink your wallet.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "walletAddress": {
-            "description": "Ethereum address or Ethereum Name Service",
-            "type": "string"
-          },
-          "unset": {
-            "description": "Unsets the wallet associated with a user",
-            "type": "boolean",
-            "default": false
-          }
-        }
-      }
-    }
-  },
   "configuration": {
     "type": "object",
     "properties": {
@@ -31,7 +13,5 @@
         "type": "boolean"
       }
     }
-  },
-  "homepage_url": "https://command-wallet-feat-320-wo.deno.dev",
-  "short_name": "ubiquity-os-marketplace/command-wallet@development"
+  }
 }
