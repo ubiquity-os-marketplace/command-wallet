@@ -1,9 +1,11 @@
 {
   "name": "command-wallet",
-  "short_name": "ubiquity-os-marketplace/command-wallet@feat/320-workflow-artifact-migration",
+  "short_name": "local/command-wallet@local",
   "description": "Allows users to register their wallets to collect rewards.",
-  "ubiquity:listeners": [],
-  "skipBotEvents": false,
+  "ubiquity:listeners": [
+    "issue_comment.created"
+  ],
+  "skipBotEvents": true,
   "configuration": {
     "type": "object",
     "properties": {
@@ -13,5 +15,6 @@
         "type": "boolean"
       }
     }
-  }
+  },
+  "homepage_url": "https://command-wallet-feat-320-wo.deno.dev"
 }
