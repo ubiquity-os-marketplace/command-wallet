@@ -20,7 +20,9 @@
     "test": "cross-env NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest --setupFiles dotenv/config --coverage",
     "dev": "bun run --watch --no-clear-screen --port 4002 src/worker.ts",
     "supabase:generate:local": "supabase gen types typescript --local > src/types/database.ts",
-    "supabase:generate:remote": "cross-env-shell \"supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/types/database.ts\""
+    "supabase:generate:remote": "cross-env-shell \"supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/types/database.ts\"",
+    "prepare:manifest": "node ./scripts/prepare-manifest.mjs",
+    "predev": "bun run prepare:manifest"
   },
   "keywords": [
     "typescript",
