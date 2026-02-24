@@ -3,6 +3,7 @@ name: "Update Configuration and Build"
 on:
   workflow_dispatch:
   push:
+  delete:
 
 jobs:
   update-manifest:
@@ -12,8 +13,11 @@ jobs:
 
     steps:
       - name: Update Manifest and Commit Changes
-        uses: ubiquity-os/action-deploy-plugin@main
+        uses: ubiquity-os/action-deploy-plugin@feat/320-dist-artifact-branches
         with:
+          action: ${{ github.event_name == 'delete' && 'delete' || 'publish' }}
+          sourceRef: ${{ github.ref_name }}
+          artifactPrefix: dist/
           treatAsEsm: false
           sourcemap: false
           pluginEntry: ${{ github.workspace }}/src/main.ts
