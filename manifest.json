@@ -1,6 +1,6 @@
 {
   "name": "command-wallet",
-  "short_name": "local/command-wallet@local",
+  "short_name": "ubiquity-os-marketplace/command-wallet@feat/320-workflow-artifact-migration",
   "description": "Allows users to register their wallets to collect rewards.",
   "ubiquity:listeners": [
     "issue_comment.created"
