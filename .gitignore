@@ -17,3 +17,6 @@ script.ts
 .wrangler
 http-client.private.env.json
 test-dashboard.md
+
+manifest.json
+dist/
