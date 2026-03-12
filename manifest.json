@@ -43,6 +43,5 @@
         "type": "boolean"
       }
     }
-  },
-  "homepage_url": "https://command-wallet-chore-conso.deno.dev"
+  }
 }
