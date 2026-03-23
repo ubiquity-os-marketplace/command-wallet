@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.6.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.5.0...v1.6.0) (2026-03-23)
+
+
+### Features
+
+* added deno deploy ([fa404c4](https://github.com/ubiquity-os-marketplace/command-wallet/commit/fa404c4deb5e7cd95d802bcdac98cbb2ccb80bdc))
+* deno ([ca6d770](https://github.com/ubiquity-os-marketplace/command-wallet/commit/ca6d770e62f537ab797bb9743003eeaa03739703))
+* enhance wallet registration logic to prevent duplicate associations ([5985eb2](https://github.com/ubiquity-os-marketplace/command-wallet/commit/5985eb2d5d5f2b689b99dcc7831eb212bb7d710e))
+
+
+### Bug Fixes
+
+* accept kernel attestation inputs ([2a28fd1](https://github.com/ubiquity-os-marketplace/command-wallet/commit/2a28fd1ec1d3a65b0ffda8bfddc781c2cc553718))
+* align command-wallet deps ([9729744](https://github.com/ubiquity-os-marketplace/command-wallet/commit/9729744ee168d0d2d59d50b7ee04fa7f9404e646))
+* align manifest workflow and command schema metadata ([ec44ad0](https://github.com/ubiquity-os-marketplace/command-wallet/commit/ec44ad07ecb4fca692a035031ff9e400ed8da9b3))
+* bot events are no longer ignored ([7fff4f1](https://github.com/ubiquity-os-marketplace/command-wallet/commit/7fff4f1cc86aba4703d809dbbbb805dfbcd40d44))
+* **ci:** align deploy workflows with artifact defaults ([9f85b76](https://github.com/ubiquity-os-marketplace/command-wallet/commit/9f85b76fdd6a02d471b80d31eb7e4930ab09641b))
+* **ci:** setup deno before install-time manifest generation ([fa22bc0](https://github.com/ubiquity-os-marketplace/command-wallet/commit/fa22bc07bf74491cf9e35094cbc3f187d99a80ea))
+* **ci:** use artifact branch deploy actions ([41a4920](https://github.com/ubiquity-os-marketplace/command-wallet/commit/41a492010ff2ba15ac1fe0e730e4dafadcd020c1))
+* generate manifest on install for tests and deploy ([dd91b84](https://github.com/ubiquity-os-marketplace/command-wallet/commit/dd91b84e12476fbaa9788021a04a5b1417ec6651))
+* improve wallet registration logic and update test setup for wallet commands ([264dff4](https://github.com/ubiquity-os-marketplace/command-wallet/commit/264dff4fad8eaf1825478d7e156d18e7070efd06))
+* inline manifest prepare and target deploy action main ([2edc1bb](https://github.com/ubiquity-os-marketplace/command-wallet/commit/2edc1bb11a2dac10fd700f704539bd0bcd3a4e49))
+* install dependencies before deno deploy ([f9b5921](https://github.com/ubiquity-os-marketplace/command-wallet/commit/f9b59219e3f3f98201c21aabe794fc62e5c324f7))
+* **knip:** use bunx for manifest prepare script ([0e5384b](https://github.com/ubiquity-os-marketplace/command-wallet/commit/0e5384ba592eafa469e1709c9cb78c861710b1b8))
+* **manifest:** derive short_name from CI repository context ([87df20c](https://github.com/ubiquity-os-marketplace/command-wallet/commit/87df20c0bf65bcb48d0a442957b50ef42f95d7d4))
+* **prepare:** use published manifest tool dist-tag ([cffcb53](https://github.com/ubiquity-os-marketplace/command-wallet/commit/cffcb536e91b38dd76301bf48b81ce1f885e186c))
+* release please issue permission ([16db684](https://github.com/ubiquity-os-marketplace/command-wallet/commit/16db684e5e36d58e3cd49de804ad84c336e64808))
+* release please issue permission ([6244ec5](https://github.com/ubiquity-os-marketplace/command-wallet/commit/6244ec537124fd8a39069030af25c8916eba2542))
+* remove unused ubiquity listeners ([a58357f](https://github.com/ubiquity-os-marketplace/command-wallet/commit/a58357f72ec3720c609e4d304daa889becf82062))
+* set deploy action ref to [@main](https://github.com/main) ([3858e29](https://github.com/ubiquity-os-marketplace/command-wallet/commit/3858e29be3908633ecd84bf6381ae051f284de24))
+* sync manifest workflow metadata for issue 27 ([6afc0bd](https://github.com/ubiquity-os-marketplace/command-wallet/commit/6afc0bde9a4e5413dc185af4763d022b87064401))
+* sync workflow skipBotEvents and parameter metadata ([674c108](https://github.com/ubiquity-os-marketplace/command-wallet/commit/674c10861bddca37d38690d63c1e49190f11ae20))
+* update logging for wallet registration to use warnings for existing addresses and add test cases ([7c5fc80](https://github.com/ubiquity-os-marketplace/command-wallet/commit/7c5fc809fd798f2ed5f805f403ee7ac4feea98db))
+* **workflows:** pin deploy action ref and source branch input ([92a68f9](https://github.com/ubiquity-os-marketplace/command-wallet/commit/92a68f96db71be2c71edc991dc80e501d8cca890))
+* **workflows:** use artifact deploy action branch for dist publish ([68bdfef](https://github.com/ubiquity-os-marketplace/command-wallet/commit/68bdfeffade2f31bc10b3f6944cf4b4982299e94))
+
 ## [1.5.0](https://github.com/ubiquity-os-marketplace/command-wallet/compare/v1.4.0...v1.5.0) (2025-02-16)
 
 
