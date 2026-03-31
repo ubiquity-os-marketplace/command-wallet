@@ -1,0 +1,47 @@
+{
+  "name": "command-wallet",
+  "short_name": "ubiquity-os-marketplace/command-wallet@issue-17-deno-deploy-workflow",
+  "description": "Allows users to register their wallets to collect rewards.",
+  "commands": {
+    "wallet": {
+      "description": "Register your wallet address for payments. Use '/wallet unset' to unlink your wallet.",
+      "ubiquity:example": "/wallet ubq.eth",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "walletAddress": {
+            "description": "Wallet address or ENS name to register for payouts.",
+            "examples": [
+              "ubq.eth"
+            ],
+            "type": "string"
+          },
+          "unset": {
+            "default": false,
+            "description": "Set to true to unlink the currently registered wallet.",
+            "examples": [
+              true
+            ],
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "walletAddress",
+          "unset"
+        ]
+      }
+    }
+  },
+  "ubiquity:listeners": [],
+  "skipBotEvents": false,
+  "configuration": {
+    "type": "object",
+    "properties": {
+      "registerWalletWithVerification": {
+        "default": false,
+        "description": "Validate an Ethers signed message from the user to verify their wallet address",
+        "type": "boolean"
+      }
+    }
+  }
+}
