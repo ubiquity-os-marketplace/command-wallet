@@ -43,5 +43,6 @@
         "type": "boolean"
       }
     }
-  }
+  },
+  "homepage_url": "https://command-wallet--issue-17-deno-deploy-workf.ubiquity-os.deno.net"
 }
