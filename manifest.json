@@ -1,5 +1,5 @@
 {
-  "name": "command-wallet",
+  "name": "@ubiquity-os/command-wallet",
   "short_name": "ubiquity-os-marketplace/command-wallet@issue-17-deno-deploy-workflow",
   "description": "Allows users to register their wallets to collect rewards.",
   "commands": {
