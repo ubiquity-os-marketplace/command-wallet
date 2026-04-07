@@ -1,11 +1,10 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { drop } from "@mswjs/data";
 import { Octokit } from "@octokit/rest";
-import { CommentHandler } from "@ubiquity-os/plugin-sdk";
 import { Logs } from "@ubiquity-os/ubiquity-os-logger";
-import { ethers } from "ethers";
+import { JsonRpcProvider } from "ethers";
 import { plugin } from "../src/plugin";
-import { Context } from "../src/types/index";
+import type { Context } from "../src/types/index";
 import { db } from "./__mocks__/db";
 import dbSeed from "./__mocks__/db-seed.json";
 import { server } from "./__mocks__/node";
@@ -13,6 +12,7 @@ import commentCreatedPayload from "./__mocks__/payloads/comment-created.json";
 
 beforeAll(() => {
   server.listen();
+  jest.spyOn(JsonRpcProvider.prototype, "resolveName").mockResolvedValue("0xefC0e701A824943b469a694aC564Aa1efF7Ab7dd");
 });
 
 afterEach(() => {
@@ -24,18 +24,11 @@ afterAll(() => server.close());
 
 const eventName = "issue_comment.created";
 
-jest.unstable_mockModule("ethers", () => ({
-  ethers: {
-    JsonRpcProvider: jest.fn(() => ({
-      resolveName: jest.fn(async () => "0x0000000000000000000000000000000000000001"),
-    })),
-    getAddress: (jest.requireActual("ethers") as typeof ethers).getAddress,
-  },
-}));
-
-jest.unstable_mockModule("@ubiquity-os/plugin-sdk", () => ({
-  postComment: jest.fn(),
-}));
+function createCommentHandler() {
+  return {
+    postComment: jest.fn(async () => undefined),
+  };
+}
 
 describe("Wallet command tests", () => {
   beforeEach(() => {
@@ -72,7 +65,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("debug"),
-      commentHandler: new CommentHandler(),
+      commentHandler: createCommentHandler(),
     } as unknown as Context;
 
     await plugin(context);
@@ -115,7 +108,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("debug"),
-      commentHandler: new CommentHandler(),
+      commentHandler: createCommentHandler(),
     } as unknown as Context;
 
     await plugin(context);
@@ -154,7 +147,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("debug"),
-      commentHandler: new CommentHandler(),
+      commentHandler: createCommentHandler(),
     } as unknown as Context);
 
     expect(okSpy).toHaveBeenCalledWith("Successfully unset wallet");
@@ -185,7 +178,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("info"),
-      commentHandler: new CommentHandler(),
+      commentHandler: createCommentHandler(),
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith("This wallet address is already registered to your account.");
@@ -215,7 +208,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("info"),
-      commentHandler: new CommentHandler(),
+      commentHandler: createCommentHandler(),
     } as unknown as Context);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenLastCalledWith("This wallet address is already registered to another user.");
@@ -247,7 +240,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("info"),
-      commentHandler: new CommentHandler(),
+      commentHandler: createCommentHandler(),
     } as unknown as Context);
 
     expect(okSpy).toHaveBeenCalledWith(
@@ -284,7 +277,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("info"),
-      commentHandler: new CommentHandler(),
+      commentHandler: createCommentHandler(),
     } as unknown as Context);
 
     expect(okSpy).toHaveBeenCalledWith(
@@ -326,7 +319,7 @@ describe("Wallet command tests", () => {
         SUPABASE_KEY: process.env.SUPABASE_KEY,
       },
       logger: new Logs("info"),
-      commentHandler: new CommentHandler(),
+      commentHandler: createCommentHandler(),
     } as unknown as Context);
 
     expect(okSpy).not.toHaveBeenCalledWith(
@@ -372,7 +365,7 @@ describe("Wallet command tests", () => {
           SUPABASE_KEY: process.env.SUPABASE_KEY,
         },
         logger: new Logs("info"),
-        commentHandler: new CommentHandler(),
+        commentHandler: createCommentHandler(),
       }) as unknown as Context;
 
     const attempts = 5;
