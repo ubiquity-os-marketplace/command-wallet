@@ -6,9 +6,9 @@ import { JsonRpcProvider } from "ethers";
 import { plugin } from "../src/plugin";
 import type { Context } from "../src/types/index";
 import { db } from "./__mocks__/db";
-import dbSeed from "./__mocks__/db-seed.json";
+import dbSeed from "./__mocks__/db-seed.json" with { type: "json" };
 import { server } from "./__mocks__/node";
-import commentCreatedPayload from "./__mocks__/payloads/comment-created.json";
+import commentCreatedPayload from "./__mocks__/payloads/comment-created.json" with { type: "json" };
 
 beforeAll(() => {
   server.listen();
