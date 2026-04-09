@@ -1,5 +1,5 @@
 import { createPlugin } from "@ubiquity-os/plugin-sdk";
-import { Manifest } from "@ubiquity-os/plugin-sdk/manifest";
+import { Manifest, resolveRuntimeManifest } from "@ubiquity-os/plugin-sdk/manifest";
 import { LogLevel } from "@ubiquity-os/ubiquity-os-logger";
 import type { ExecutionContext } from "hono";
 import manifest from "../manifest.json" with { type: "json" };
@@ -10,8 +10,21 @@ import { SupportedEvents } from "./types/context";
 import { Env, envSchema } from "./types/env";
 import { PluginSettings, pluginSettingsSchema } from "./types/plugin-input";
 
+function buildRuntimeManifest(request: Request) {
+  const runtimeManifest = resolveRuntimeManifest(manifest as Manifest);
+  return {
+    ...runtimeManifest,
+    homepage_url: new URL(request.url).origin,
+  };
+}
+
 export default {
   async fetch(request: Request, env: Env, executionCtx?: ExecutionContext) {
+    const runtimeManifest = buildRuntimeManifest(request);
+    if (new URL(request.url).pathname === "/manifest.json") {
+      return Response.json(runtimeManifest);
+    }
+
     return createPlugin<PluginSettings, Env, Command, SupportedEvents>(
       (context) => {
         return plugin({
@@ -19,7 +32,7 @@ export default {
           adapters: {} as ReturnType<typeof createAdapters>,
         });
       },
-      manifest as Manifest,
+      runtimeManifest,
       {
         envSchema: envSchema,
         postCommentOnError: true,
