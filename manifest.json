@@ -1,5 +1,5 @@
 {
-  "name": "command-wallet",
+  "name": "@ubiquity-os/command-wallet",
   "short_name": "ubiquity-os-marketplace/command-wallet@development",
   "description": "Allows users to register their wallets to collect rewards.",
   "commands": {
@@ -43,6 +43,5 @@
         "type": "boolean"
       }
     }
-  },
-  "homepage_url": "https://command-wallet--development.ubiquity-os.deno.net"
+  }
 }
