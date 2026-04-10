@@ -1,8 +1,8 @@
 import { createAdapters } from "../adapters/index";
-import { Env } from "./env";
-import { PluginSettings } from "./plugin-input";
-import { Context as PluginContext } from "@ubiquity-os/plugin-sdk";
-import { Command } from "./command";
+import type { Env } from "./env";
+import type { PluginSettings } from "./plugin-input";
+import type { Context as PluginContext } from "@ubiquity-os/plugin-sdk";
+import type { Command } from "./command";
 
 export type SupportedEvents = "issue_comment.created";
 

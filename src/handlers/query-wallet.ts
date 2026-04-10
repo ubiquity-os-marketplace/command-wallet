@@ -1,5 +1,5 @@
 import { ethers, JsonRpcProvider } from "ethers";
-import { Context } from "../types/index";
+import type { Context } from "../types/index";
 
 function extractEnsName(text: string) {
   const ensRegex = /^(?=.{3,40}$)([a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/gm;
