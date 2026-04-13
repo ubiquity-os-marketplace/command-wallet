@@ -18,7 +18,6 @@
     "knip-ci": "knip --no-exit-code --reporter json --config .github/knip.ts",
     "prepare": "bun run prepare:manifest && husky install",
     "test": "jest --setupFiles dotenv/config --coverage",
-    "dev": "bun run --watch --no-clear-screen --port 4002 src/worker.ts",
     "supabase:generate:local": "supabase gen types typescript --local > src/types/database.ts",
     "supabase:generate:remote": "cross-env-shell \"supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/types/database.ts\"",
     "prepare:manifest": "bun x @ubiquity-os/plugin-manifest-tool@latest",
@@ -39,7 +38,8 @@
     "@ubiquity-os/ubiquity-os-logger": "^1.4.0",
     "commander": "12.1.0",
     "dotenv": "16.4.5",
-    "ethers": "6.13.1"
+    "ethers": "6.13.1",
+    "hono": "^4.11.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
