@@ -3,7 +3,7 @@ import { CommanderError } from "commander";
 import { createAdapters } from "./adapters/index";
 import { CommandParser } from "./handlers/command-parser";
 import { handleCommand } from "./handlers/query-wallet";
-import { Context } from "./types/index";
+import type { Context } from "./types/index";
 
 /**
  * How a worker executes the plugin.
