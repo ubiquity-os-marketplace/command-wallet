@@ -32,8 +32,10 @@
       }
     }
   },
-  "ubiquity:listeners": [],
-  "skipBotEvents": false,
+  "ubiquity:listeners": [
+    "issue_comment.created"
+  ],
+  "skipBotEvents": true,
   "configuration": {
     "type": "object",
     "properties": {
@@ -43,5 +45,6 @@
         "type": "boolean"
       }
     }
-  }
+  },
+  "homepage_url": "https://command-wallet.ubiquity-os.deno.net"
 }
